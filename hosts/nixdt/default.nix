@@ -5,6 +5,7 @@
     ./hardware-configuration.nix
     ../../modules/nixos/base.nix
     ../../modules/nixos/gnome.nix
+    ../../modules/nixos/nvidia.nix
 
     inputs.home-manager.nixosModules.default
   ];

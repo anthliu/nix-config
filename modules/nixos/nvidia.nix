@@ -1,0 +1,41 @@
+{ config, lib, pkgs, ... }:
+
+{
+  # 1. Enable "Unfree" packages (Nvidia drivers are proprietary)
+  # You might already have this in base.nix, but it doesn't hurt to ensure it's here.
+  nixpkgs.config.allowUnfree = true;
+
+  # 2. Enable OpenGL (required for the driver to work)
+  # Note: On newer NixOS versions (24.11+), this is 'hardware.graphics'
+  # On older versions, it was 'hardware.opengl'
+  hardware.graphics = {
+    enable = true;
+  };
+
+  # 3. Load the Nvidia drivers for X11 and Wayland
+  services.xserver.videoDrivers = [ "nvidia" ];
+
+  # 4. Configure the Nvidia hardware
+  hardware.nvidia = {
+    # Modesetting is required.
+    modesetting.enable = true;
+
+    # Power management can be experimental. 
+    # Enable if you see graphical corruption after suspend/wake.
+    powerManagement.enable = false;
+    
+    # Fine-grained power management (only for Turing+ GPUs). 
+    # Turns off GPU when not in use. Experimental.
+    powerManagement.finegrained = false;
+
+    # Use the NVidia open source kernel module (not to be confused with Nouveau).
+    # 'false' uses the proprietary kernel module (recommended for stability/performance).
+    open = false;
+
+    # Enable the Nvidia settings menu (accessible via `nvidia-settings`).
+    nvidiaSettings = true;
+
+    # Choose the package version (Stable, Beta, etc.)
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+}
