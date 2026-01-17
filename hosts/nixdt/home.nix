@@ -3,7 +3,7 @@
 {
   imports = [
     ../../modules/home-manager/git.nix
-    # ../../modules/home-manager/zsh.nix  <-- easy to add later
+    ../../modules/home-manager/ssh.nix
   ];
 
   # Home Manager needs to know who you are
