@@ -16,6 +16,7 @@
     jq
     htop
     fzf
+    antigravity
   ];
 
   # Let Home Manager install and manage itself
@@ -23,4 +24,4 @@
 
   # State version for Home Manager (similar to NixOS system.stateVersion)
   home.stateVersion = "24.11"; 
-}
+} 

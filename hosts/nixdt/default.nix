@@ -37,6 +37,13 @@
 
   # --- Home Manager Configuration ---
   home-manager = {
+    # 1. Force Home Manager to use the System's config (including allowUnfree)
+    useGlobalPkgs = true;
+    
+    # 2. Install packages to /etc/profiles instead of ~/.nix-profile
+    # (Recommended for better integration, but optional)
+    useUserPackages = true;
+
     # Also pass inputs to home-manager modules
     extraSpecialArgs = { inherit inputs; };
     users = {

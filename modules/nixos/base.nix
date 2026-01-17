@@ -4,7 +4,6 @@
   # --- Core Nix Settings ---
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   
-  # Allow unfree packages (almost always needed)
   nixpkgs.config.allowUnfree = true;
 
   # --- Locale & Time ---

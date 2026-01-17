@@ -1,10 +1,10 @@
 # NixOS Flake Configuration
 
-A principled, flake-based NixOS configuration featuring:
+A vibe-coded modular NixOS configuration:
 
 * **Flakes** for reproducibility.
 * **Home Manager** for user environment management.
-* **Modular Design** to share config between machines (and future MacOS setups).
+* **Modular Design** to share config between machines.
 
 ## 📂 Structure
 
@@ -28,16 +28,7 @@ A principled, flake-based NixOS configuration featuring:
 **Apply Changes (System & Home):**
 
 ```bash
-# Don't forget to git add new files first!
 git add .
-sudo nixos-rebuild switch --flake .#nixdt
-
-```
-
-**Update System (flake.lock):**
-
-```bash
-nix flake update
 sudo nixos-rebuild switch --flake .#nixdt
 
 ```
@@ -52,64 +43,91 @@ sudo nix-collect-garbage -d
 
 ---
 
+## 🔄 Updates & Maintenance
+
+### How to Update
+
+Updates are manual and explicit. Nothing changes until you run these commands.
+
+1. **Update the Lockfile** (Downloads latest package versions):
+```bash
+nix flake update
+
+```
+
+
+2. **Apply the Update**:
+```bash
+sudo nixos-rebuild switch --flake .#nixdt
+
+```
+
+
+3. **Commit the State**:
+```bash
+git commit -am "chore: update system inputs"
+
+```
+
+
+
+### 🚑 Recovering from Breakage
+
+If an update breaks your WiFi, Graphics, or Config:
+
+**Option A: Rollback via CLI** (If you can still use the terminal)
+
+```bash
+sudo nixos-rebuild switch --rollback
+
+```
+
+**Option B: Rollback via Boot Menu** (If the system won't boot)
+
+1. Reboot the computer.
+2. In the systemd-boot menu, select the entry below the current one (e.g., `NixOS - Generation 44`).
+3. The system will boot into the exact state it was in before the update.
+
+---
+
 ## 🛠 Workflows
 
 ### 1. How to Add Packages
 
-* **For the User (You):**
-Edit `hosts/nixdt/home.nix`.
-* *Best for:* CLI tools, dev utilities, apps you use personally (ripgrep, jq, spotify).
-
-
-* **For the System (Everyone/Root):**
-Edit `modules/nixos/base.nix` (global) or `hosts/nixdt/default.nix` (machine specific).
-* *Best for:* System utilities, background services, drivers (wget, curl, drivers).
-
-
+* **User Apps (CLI/Dev):** Edit `hosts/nixdt/home.nix`.
+* **System Apps (Services/Drivers):** Edit `modules/nixos/base.nix`.
+* *Note:* If the package is **Unfree** (e.g. VSCode, Discord), ensure `allowUnfree` covers it in `base.nix`.
 
 ### 2. How to Add a New Machine
 
-1. **Create Directory:** Copy an existing host folder.
-```bash
-cp -r hosts/nixdt hosts/new-machine
+1. **Copy Host:** `cp -r hosts/nixdt hosts/new-machine`
+2. **Hardware Scan:** `nixos-generate-config --show-hardware-config > hosts/new-machine/hardware-configuration.nix`
+3. **Flake Registry:** Add `new-machine` to `flake.nix` outputs.
+4. **Build:** `sudo nixos-rebuild switch --flake .#new-machine`
 
-```
+### 3. Proprietary Apps (Antigravity/Jetski)
 
+If an app isn't in Nixpkgs or fails to build:
 
-2. **Generate Hardware Config:** Run on the new machine:
-```bash
-nixos-generate-config --show-hardware-config > hosts/new-machine/hardware-configuration.nix
-
-```
-
-
-3. **Update Config:** Edit `hosts/new-machine/default.nix` to set the new `networking.hostName`.
-4. **Register in Flake:** Open `flake.nix` and duplicate the `nixdt` block under `nixosConfigurations`, renaming it to `new-machine`.
-5. **Build:**
-```bash
-sudo nixos-rebuild switch --flake .#new-machine
-
-```
-
-
-
-### 3. How to Modify Desktop/Drivers
-
-* **Nvidia:** Edit `modules/nixos/nvidia.nix`.
-* **Gnome/DE:** Edit `modules/nixos/gnome.nix`.
-* *To enable/disable:* Comment out the import in `hosts/<name>/default.nix`.
+* **Option A:** Use **Flatpak** (`flatpak install ...`).
+* **Option B:** Use **Steam-Run** (`steam-run ./my-binary`).
 
 ---
 
 ## ⚠️ Important Gotchas
 
 **1. "Path does not exist" Error**
-Nix Flakes only see files that are **tracked by git**. If you create a new file, you must stage it before rebuilding.
+Nix Flakes only see files that are **tracked by git**.
 
 ```bash
 git add .
 
 ```
 
-**3. Home Manager Conflicts**
-If Home Manager complains about existing files (e.g., `~/.config/git/config`), delete or back up the existing file manually so Home Manager can link its own version.
+**2. Permission Denied**
+
+* Use `sudo` for `nixos-rebuild`.
+* Do **NOT** use `sudo` for `git` commands.
+
+**3. Home Manager & Unfree Packages**
+If Home Manager complains about unfree packages, ensure `useGlobalPkgs = true;` is set in the host's `default.nix`.
