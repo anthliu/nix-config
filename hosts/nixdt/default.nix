@@ -1,13 +1,12 @@
-{ pkgs, ... }:
+{ pkgs, inputs,	... }:
 
 {
   imports = [
-    # 1. Hardware Scan (Machine specific)
     ./hardware-configuration.nix
-    
-    # 2. Shared Modules (Relative paths)
     ../../modules/nixos/base.nix
     ../../modules/nixos/gnome.nix
+
+    inputs.home-manager.nixosModules.default
   ];
 
   # --- Machine Specifics ---
@@ -33,6 +32,15 @@
     description = "Anthony Liu";
     extraGroups = [ "networkmanager" "wheel" ];
     # Don't forget to set password with `passwd`
+  };
+
+  # --- Home Manager Configuration ---
+  home-manager = {
+    # Also pass inputs to home-manager modules
+    extraSpecialArgs = { inherit inputs; };
+    users = {
+      "anthliu" = import ./home.nix;
+    };
   };
 
   # --- State Version ---

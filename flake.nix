@@ -3,9 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Home Manager (Follows the same branch as nixpkgs for compatibility)
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
     nixosConfigurations = {
       nixdt = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -13,7 +18,6 @@
         specialArgs = { inherit inputs; };
         
         modules = [
-          # Import the specific host configuration
           ./hosts/nixdt/default.nix
         ];
       };
