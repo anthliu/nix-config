@@ -30,7 +30,12 @@ A vibe-coded modular NixOS configuration:
 ```bash
 git add .
 sudo nixos-rebuild switch --flake .#nixdt
+```
 
+**Apply Changes (Home Only - Faster):**
+
+```bash
+home-manager switch --flake .
 ```
 
 **Clean Garbage (Free disk space):**

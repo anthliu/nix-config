@@ -49,7 +49,7 @@
         default-column-width = { proportion = 0.5; };
         focus-ring = {
           width = 3;
-          active.color = "#f3f3f360";
+          active.color = "#f3f3f3b0";
           inactive.color = "#505050";
         };
         border = {

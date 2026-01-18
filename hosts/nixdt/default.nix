@@ -52,7 +52,7 @@
     
     # 2. Install packages to /etc/profiles instead of ~/.nix-profile
     # (Recommended for better integration, but optional)
-    useUserPackages = true;
+    useUserPackages = false;
 
     # Also pass inputs to home-manager modules
     extraSpecialArgs = { inherit inputs; };
