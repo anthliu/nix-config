@@ -6,6 +6,7 @@
     ../../modules/home-manager/ssh.nix
     ../../modules/home-manager/vim.nix
     ../../modules/home-manager/niri.nix
+    ../../modules/nixos/stylix.nix
   ];
 
   # Home Manager needs to know who you are
@@ -28,9 +29,6 @@
 
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
-
-  # Enable Stylix for Home Manager to achieve system-wide cohesion
-  stylix.enable = true;
 
   # State version for Home Manager (similar to NixOS system.stateVersion)
   home.stateVersion = "25.11"; 

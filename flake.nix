@@ -41,7 +41,8 @@
         };
         extraSpecialArgs = { inherit inputs; };
         modules = [ 
-          ./hosts/nixdt/home.nix 
+          ./hosts/nixdt/home.nix
+          inputs.stylix.homeModules.stylix
         ];
       };
     };
