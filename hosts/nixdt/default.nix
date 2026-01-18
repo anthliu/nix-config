@@ -43,7 +43,7 @@
   users.users.anthliu = {
     isNormalUser = true;
     description = "Anthony Liu";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "video" ];
     # Don't forget to set password with `passwd`
   };
 

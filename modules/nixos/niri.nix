@@ -46,6 +46,8 @@
     alacritty
     fuzzel
     thunar
+    thunar-archive-plugin
+    thunar-volman
     tumbler
     feh
   ];
@@ -59,6 +61,13 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+
+  # Files
+  # Enable GVFS (needed for Trash, mounting, and identifying devices)
+  services.gvfs.enable = true;
+
+  # Enable UDisks2 (needed for volume management)
+  services.udisks2.enable = true;
 
   # Bluetooth
   hardware.bluetooth.enable = true;
