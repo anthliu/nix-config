@@ -18,7 +18,14 @@
 
   # --- Display Manager (GDM) ---
   services.xserver.enable = true;
-  services.displayManager.gdm.enable = true;
+  services.displayManager.gdm = {
+    enable = true;
+    settings = {
+      greeter = {
+        Exclude = "root";
+      };
+    };
+  };
 
   # --- Notification Daemon (Mako) ---
   # Niri doesn't come with a notification daemon, Mako is recommended
@@ -55,7 +62,7 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
-  
+ 
   # Keyring
   services.gnome.gnome-keyring.enable = true;
 

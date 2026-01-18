@@ -57,6 +57,7 @@
     users = {
       "anthliu" = import ./home.nix;
     };
+    backupFileExtension = "backup";
   };
 
   # --- State Version ---
