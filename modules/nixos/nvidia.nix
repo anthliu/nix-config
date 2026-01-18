@@ -6,6 +6,7 @@
   # On older versions, it was 'hardware.opengl'
   hardware.graphics = {
     enable = true;
+    enable32Bit = true;
   };
 
   # 3. Load the Nvidia drivers for X11 and Wayland
