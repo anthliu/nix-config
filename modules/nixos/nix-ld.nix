@@ -7,8 +7,15 @@
   programs.nix-ld.libraries = with pkgs; [
     stdenv.cc.cc.lib
     zlib
-    glib
     openssl
     libgcc
+    glib
+
+    # for JAX/CUDA:
+    linuxPackages.nvidia_x11
+    # sometimes required:
+    xorg.libXi
+    xorg.libXmu
+    libGL
   ];
 }
