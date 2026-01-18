@@ -10,6 +10,7 @@
     ../../modules/nixos/steam.nix
     ../../modules/nixos/nix-ld.nix
     ../../modules/nixos/stylix.nix
+    ../../modules/nixos/openrgb.nix
     inputs.stylix.nixosModules.stylix
 
 
