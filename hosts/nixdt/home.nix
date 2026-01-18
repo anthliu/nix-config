@@ -33,5 +33,5 @@
   stylix.enable = true;
 
   # State version for Home Manager (similar to NixOS system.stateVersion)
-  home.stateVersion = "24.11"; 
+  home.stateVersion = "25.11"; 
 } 

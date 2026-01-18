@@ -1,11 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  # 1. Enable "Unfree" packages (Nvidia drivers are proprietary)
-  # You might already have this in base.nix, but it doesn't hurt to ensure it's here.
-  nixpkgs.config.allowUnfree = true;
-
-  # 2. Enable OpenGL (required for the driver to work)
+  # 1. Enable OpenGL (required for the driver to work)
   # Note: On newer NixOS versions (24.11+), this is 'hardware.graphics'
   # On older versions, it was 'hardware.opengl'
   hardware.graphics = {

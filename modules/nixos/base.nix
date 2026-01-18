@@ -1,4 +1,4 @@
-{ pkgs, ... }: 
+{ pkgs, lib, ... }: 
 
 {
   # --- Core Nix Settings ---
@@ -7,11 +7,11 @@
   nixpkgs.config.allowUnfree = true;
 
   # --- Locale & Time ---
-  time.timeZone = "America/Los_Angeles";
-  i18n.defaultLocale = "en_US.UTF-8";
+  time.timeZone = lib.mkDefault "America/Los_Angeles";
+  i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
   console = {
-    font = "Lat2-Terminus16";
-    keyMap = "us";
+    font = lib.mkDefault "Lat2-Terminus16";
+    keyMap = lib.mkDefault "us";
   };
 
   # --- Essential Packages ---
