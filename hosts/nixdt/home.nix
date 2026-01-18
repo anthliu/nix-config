@@ -21,6 +21,7 @@
     fzf
     antigravity
     uv
+    fastfetch
   ];
 
   # Let Home Manager install and manage itself
