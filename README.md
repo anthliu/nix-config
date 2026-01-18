@@ -1,5 +1,6 @@
 # NixOS Flake Configuration
 
+
 A vibe-coded modular NixOS configuration:
 
 * **Flakes** for reproducibility.
@@ -24,6 +25,13 @@ A vibe-coded modular NixOS configuration:
 ```
 
 ## ⚡ Cheatsheet
+
+**Check Build (No Sudo):**
+
+```bash
+# Check for build errors without creating the 'result' symlink
+nixos-rebuild build --flake .#nixdt --no-link
+```
 
 **Apply Changes (System & Home):**
 
