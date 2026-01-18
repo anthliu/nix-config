@@ -22,7 +22,7 @@
 
     # Power management can be experimental. 
     # Enable if you see graphical corruption after suspend/wake.
-    powerManagement.enable = false;
+    powerManagement.enable = true;
     
     # Fine-grained power management (only for Turing+ GPUs). 
     # Turns off GPU when not in use. Experimental.

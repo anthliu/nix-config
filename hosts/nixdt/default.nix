@@ -13,6 +13,7 @@
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     inputs.nixos-hardware.nixosModules.gigabyte-b650
+    ./usb-wakeup.nix
   ];
 
   # --- Machine Specifics ---
