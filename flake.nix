@@ -17,6 +17,7 @@
     };
 
     niri.url = "github:sodiboo/niri-flake";
+    stylix.url = "github:danth/stylix";
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: {

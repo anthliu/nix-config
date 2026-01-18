@@ -9,6 +9,8 @@
     ../../modules/nixos/nvidia.nix
     ../../modules/nixos/steam.nix
     ../../modules/nixos/nix-ld.nix
+    ../../modules/nixos/stylix.nix
+    inputs.stylix.nixosModules.stylix
 
 
     inputs.home-manager.nixosModules.default
