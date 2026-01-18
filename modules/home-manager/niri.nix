@@ -48,8 +48,8 @@
         ];
         default-column-width = { proportion = 0.5; };
         focus-ring = {
-          width = 3;
-          active.color = "#f3f3f3b0";
+          width = 4;
+          active.color = "hsla(0, 0%, 100%, 0.5)";
           inactive.color = "#505050";
         };
         border = {
