@@ -8,6 +8,8 @@
     inputs.dms.nixosModules.default
     ../../modules/nixos/nvidia.nix
     ../../modules/nixos/steam.nix
+    ../../modules/nixos/nix-ld.nix
+
 
     inputs.home-manager.nixosModules.default
     

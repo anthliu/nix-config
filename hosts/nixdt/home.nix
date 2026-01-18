@@ -20,6 +20,7 @@
     htop
     fzf
     antigravity
+    uv
   ];
 
   # Let Home Manager install and manage itself
