@@ -22,6 +22,7 @@
   boot.loader.systemd-boot.extraEntries = {
     "windows.conf" = ''
       title Windows
+      sort-key 0_windows
       efi /EFI/edk2-uefi-shell/shell.efi
       options -nointerrupt -noconsolein -noconsoleout "FS2:\EFI\Microsoft\Boot\Bootmgfw.efi"
     '';
