@@ -23,5 +23,8 @@
     curl
   ];
 
+  # --- GUI Apps ---
+  programs.firefox.enable = true;
+
   environment.variables.EDITOR = "vim";
 }

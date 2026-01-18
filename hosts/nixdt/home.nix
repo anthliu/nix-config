@@ -5,6 +5,7 @@
     ../../modules/home-manager/git.nix
     ../../modules/home-manager/ssh.nix
     ../../modules/home-manager/vim.nix
+    ../../modules/home-manager/theme.nix
   ];
 
   # Home Manager needs to know who you are

@@ -10,6 +10,11 @@
     };
     
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell/stable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: {

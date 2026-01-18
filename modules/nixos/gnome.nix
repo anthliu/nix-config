@@ -16,9 +16,6 @@
     pulse.enable = true;
   };
 
-  # --- GUI Apps ---
-  programs.firefox.enable = true;
-  
   # Gnome needs dconf for saving settings
   programs.dconf.enable = true; 
 }
