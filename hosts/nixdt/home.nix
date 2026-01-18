@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
@@ -15,6 +15,9 @@
 
   # Install user-specific packages here
   home.packages = with pkgs; [
+    # Explicitly install Home Manager CLI
+    inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.home-manager
+    
     ripgrep
     jq
     htop
