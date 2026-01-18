@@ -64,6 +64,10 @@
         };
       };
 
+      gestures = {
+        hot-corners.enable = false;
+      };
+
       spawn-at-startup = [
         # { command = [ "waybar" ]; }
         # { command = [ "swaybg" "-i" "/path/to/image.jpg" ]; }

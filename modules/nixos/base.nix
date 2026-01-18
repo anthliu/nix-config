@@ -21,6 +21,7 @@
     wget
     git
     curl
+    tmux
   ];
 
   # --- GUI Apps ---
