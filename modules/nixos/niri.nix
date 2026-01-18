@@ -46,6 +46,8 @@
     alacritty
     fuzzel
     thunar
+    tumbler
+    feh
   ];
 
   # --- Services ---
