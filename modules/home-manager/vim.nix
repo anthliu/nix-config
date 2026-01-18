@@ -5,78 +5,73 @@
     enable = true;
     defaultEditor = true;
     extraConfig = ''
-      " syntax mapping
-      autocmd BufNewFile,BufRead *.tex set syntax=context
-      " Mappings
-      map Y y$
-      imap fd <Esc>
-
-      " Backup
-      if !isdirectory($HOME . "/.vim")
-          call mkdir($HOME . "/.vim", "p")
-      endi
-      if !isdirectory($HOME . "/.vim/backup_files")
-          call mkdir($HOME . "/.vim/backup_files", "p")
-      endi
-      if !isdirectory($HOME . "/.vim/swap_files")
-          call mkdir($HOME . "/.vim/swap_files", "p")
-      endi
-      if !isdirectory($HOME . "/.vim/undo_files")
-          call mkdir($HOME . "/.vim/undo_files", "p")
-      endi
-      set backupdir=~/.vim/backup_files//
-      set directory=~/.vim/swap_files//
-      set undodir=~/.vim/undo_files//
-
-      " custom
-      set relativenumber
-
-      " for make messages
-      nnoremap <leader>m :silent make\|redraw!\|cc<CR>
-      set shortmess=a
-
-      set ignorecase
-      set confirm
+      " === General Settings ===
+      set nocompatible
+      set history=1000
+      set encoding=utf-8
       set visualbell
       set backspace=indent,eol,start
+      set mouse=a
 
+      " === UI & Appearance ===
+      syntax on
+      set guifont=Monospace:h10
+      filetype plugin indent on
+      set number
+      set relativenumber
       set laststatus=2
       set showcmd
-      set cmdheight=2
       set ruler
-
-      " == basic ==
-
-      syntax on
-      filetype plugin indent on
-      let g:python_recommended_style = 0
-
-      set nocompatible
-      set number
       set showmode
-      " set tw=80
-      set smartcase
-      set smarttab
-      " set smartindent
-      set autoindent
-      set softtabstop=2
-      set shiftwidth=2
-      set expandtab
-      set incsearch
-      "set mouse=a
-      set history=1000
-      "set clipboard=unnamedplus,autoselect
-
-      "set completeopt=menuone,menu,longest
-
-      set wildignore+=*\\tmp\\*,*.swp,*.swo,*.zip,.git,.cabal-sandbox
-      set wildmode=longest,list,full
-      set wildmenu
-      set completeopt+=longest
-
+      set confirm
       set t_Co=256
 
-      set cmdheight=1
+      " === Tab & Indent ===
+      set expandtab
+      set softtabstop=2
+      set shiftwidth=2
+      set autoindent
+      let g:python_recommended_style = 0
+
+      " === Search ===
+      set ignorecase
+      set smartcase
+      set incsearch
+
+      " === Mappings ===
+      let mapleader = ","
+      map Y y$
+      imap fd <Esc>
+      " Quick save/make
+      nnoremap <leader>m :silent make\|redraw!\|cc<CR>
+
+      " === Backups & Undo ===
+      " Store all persistent files in ~/.local/state/vim to avoid git clutter
+      set backup
+      set undofile
+      set noswapfile " Swaps are often more annoying than useful now, but if you want them:
+      " set swapfile 
+
+      set backupdir=~/.local/state/vim/backup//
+      set undodir=~/.local/state/vim/undo//
+      set directory=~/.local/state/vim/swap//
+
+      " === Wildmenu ===
+      set wildmenu
+      set wildmode=longest,list,full
+      set wildignore+=*/tmp/*,*.swp,*.swo,*.zip,.git,.cabal-sandbox
+      set completeopt=menuone,menu,longest
+
+      " === Autocmds ===
+      autocmd BufNewFile,BufRead *.tex set syntax=context
     '';
+  };
+
+  # Ensure directories exist (managed by Home Manager)
+  # This is cross-platform and cleaner than manual mkdir in VimScript
+  home.file = {
+    ".local/state/vim/backup/.keep".text = "";
+    ".local/state/vim/undo/.keep".text = "";
+    ".local/state/vim/swap/.keep".text = "";
   };
 }
