@@ -6,6 +6,7 @@
     ../../modules/home-manager/ssh.nix
     ../../modules/home-manager/vim.nix
     ../../modules/home-manager/niri.nix
+    ../../modules/home-manager/swayidle.nix
     ../../modules/nixos/stylix.nix
   ];
 
