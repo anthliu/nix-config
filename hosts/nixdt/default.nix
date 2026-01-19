@@ -11,6 +11,7 @@
     ../../modules/nixos/nix-ld.nix
     ../../modules/nixos/stylix.nix
     ../../modules/nixos/openrgb.nix
+    ../../modules/nixos/llama-cpp.nix
     inputs.stylix.nixosModules.stylix
 
 
