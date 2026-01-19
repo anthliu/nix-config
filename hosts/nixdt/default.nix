@@ -4,14 +4,13 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/nixos/base.nix
-    ../../modules/nixos/niri.nix
+    ../../modules/nixos/desktop/niri.nix
     inputs.dms.nixosModules.default
-    ../../modules/nixos/nvidia.nix
-    ../../modules/nixos/steam.nix
-    ../../modules/nixos/nix-ld.nix
-    ../../modules/nixos/stylix.nix
-    ../../modules/nixos/openrgb.nix
-    ../../modules/nixos/llama-cpp.nix
+    ../../modules/nixos/hardware/nvidia.nix
+    ../../modules/nixos/services/steam.nix
+    ../../modules/nixos/services/nix-ld.nix
+    ../../modules/nixos/services/stylix.nix
+    ../../modules/nixos/hardware/openrgb.nix
     inputs.stylix.nixosModules.stylix
 
 

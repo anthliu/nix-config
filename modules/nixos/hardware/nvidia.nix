@@ -40,4 +40,10 @@
     # Choose the package version (Stable, Beta, etc.)
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
+
+  nixpkgs.overlays = [
+    (final: prev: {
+      llama-cpp = prev.llama-cpp.override { cudaSupport = true; };
+    })
+  ];
 }

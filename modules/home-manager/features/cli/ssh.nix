@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   programs.ssh = {
@@ -19,7 +19,7 @@
       "github.com" = {
         hostname = "github.com";
         user = "git";
-        identityFile = "/home/anthliu/.ssh/id_ed25519"; 
+        identityFile = "${config.home.homeDirectory}/.ssh/id_ed25519"; 
       };
     };
   };
