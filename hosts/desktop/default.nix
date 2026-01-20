@@ -23,7 +23,7 @@
   ];
 
   # --- Machine Specifics ---
-  networking.hostName = "nixdt";
+  networking.hostName = "desktop";
   networking.networkmanager.enable = true;
 
   # Bootloader (Specific to this dual-boot setup)

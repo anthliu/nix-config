@@ -23,13 +23,13 @@
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: {
     nixosConfigurations = {
-      nixdt = nixpkgs.lib.nixosSystem {
+      desktop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         
         specialArgs = { inherit inputs; };
         
         modules = [
-          ./hosts/nixdt/default.nix
+          ./hosts/desktop/default.nix
         ];
       };
 
@@ -43,14 +43,14 @@
     };
 
     homeConfigurations = {
-      "anthliu@nixdt" = home-manager.lib.homeManagerConfiguration {
+      "anthliu@desktop" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "x86_64-linux";
           config.allowUnfree = true;
         };
         extraSpecialArgs = { inherit inputs; };
         modules = [ 
-          ./hosts/nixdt/home.nix
+          ./hosts/desktop/home.nix
           inputs.stylix.homeModules.stylix
         ];
       };
