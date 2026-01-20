@@ -1,9 +1,11 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   imports = [
-    ./core.nix
-    ../features/cli/common.nix
     ../features/cli/ai.nix
+  ];
+
+  home.packages = with pkgs; [
+    uv
   ];
 }

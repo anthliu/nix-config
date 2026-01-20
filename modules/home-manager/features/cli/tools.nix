@@ -13,8 +13,5 @@
     ripgrep
     jq
     fzf
-    
-    # Dev Tools
-    uv
   ];
 }

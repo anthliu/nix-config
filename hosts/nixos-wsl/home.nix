@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ../../modules/home-manager/profiles/core.nix
     ../../modules/home-manager/profiles/dev.nix
   ];
 

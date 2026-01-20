@@ -2,6 +2,8 @@
 
 {
   imports = [
+    ../../modules/home-manager/profiles/core.nix
+    ../../modules/home-manager/profiles/dev.nix
     ../../modules/home-manager/profiles/desktop.nix
     ../../modules/nixos/services/stylix.nix
   ];
