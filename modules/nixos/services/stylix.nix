@@ -4,7 +4,7 @@
   stylix = {
     enable = true;
     image = ../../../assets/wallpaper.png;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
     
     # GDM Specific
     cursor.package = pkgs.adwaita-icon-theme;
@@ -23,6 +23,12 @@
       serif = {
         package = pkgs.inter;
         name = "Inter";
+      };
+
+      sizes = {
+        terminal = 11;
+        applications = 11;
+        desktop = 11;
       };
     };
 
