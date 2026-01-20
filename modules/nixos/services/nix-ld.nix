@@ -10,6 +10,9 @@
     openssl
     libgcc
     glib
+    gtk3
+    libsecret
+    nss
 
     # for JAX/CUDA:
     linuxPackages.nvidia_x11

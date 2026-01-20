@@ -18,6 +18,7 @@
 
     niri.url = "github:sodiboo/niri-flake";
     stylix.url = "github:danth/stylix";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: {
@@ -31,10 +32,18 @@
           ./hosts/nixdt/default.nix
         ];
       };
+
+      nixos-wsl = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/nixos-wsl/default.nix
+        ];
+      };
     };
 
     homeConfigurations = {
-      "anthliu" = home-manager.lib.homeManagerConfiguration {
+      "anthliu@nixdt" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "x86_64-linux";
           config.allowUnfree = true;
@@ -43,6 +52,17 @@
         modules = [ 
           ./hosts/nixdt/home.nix
           inputs.stylix.homeModules.stylix
+        ];
+      };
+
+      "anthliu@nixos-wsl" = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
+        extraSpecialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/nixos-wsl/home.nix
         ];
       };
     };
