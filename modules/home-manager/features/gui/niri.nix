@@ -36,21 +36,35 @@
             y = 0;
           };
         };
+
+        "Samsung Electric Company Odyssey G81SF HNBYA00490" = {
+          mode = {
+            width = 3840;
+            height = 2160;
+            refresh = 239.996;
+          };
+          scale = 1.25;
+          # transform = "normal";
+          position = {
+            x = 3440;
+            y = 0;
+          };
+        };
       };
 
       layout = {
         gaps = 8;
         center-focused-column = "never";
         preset-column-widths = [
-          { proportion = 1.0 / 3.0; }
+          { proportion = 0.4; }
           { proportion = 0.5; }
-          { proportion = 2.0 / 3.0; }
+          { proportion = 0.6; }
         ];
         default-column-width = { proportion = 0.5; };
         focus-ring = {
           width = 4;
           active.color = "hsla(0, 0%, 100%, 0.5)";
-          inactive.color = "#505050";
+          inactive.color = "hsla(0, 0%, 100%, 0.5)";
         };
         border = {
           enable = false;
