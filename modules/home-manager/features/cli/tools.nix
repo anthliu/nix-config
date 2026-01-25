@@ -13,5 +13,6 @@
     ripgrep
     jq
     fzf
+    nvtopPackages.full
   ];
 }
