@@ -3,16 +3,13 @@
 {
   home.packages = with pkgs; [
     # Basic Utilities
-    wget
-    curl
-    tmux
     htop
     fastfetch
+    tree
     
     # Modern CLI Tools
     ripgrep
     jq
     fzf
-    nvtopPackages.full
   ];
 }

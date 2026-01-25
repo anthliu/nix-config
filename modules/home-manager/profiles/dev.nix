@@ -7,5 +7,7 @@
 
   home.packages = with pkgs; [
     uv
+    qmk
+    dos2unix
   ];
 }

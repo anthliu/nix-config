@@ -43,7 +43,6 @@
     kdePackages.polkit-kde-agent-1 # plasma-polkit-agent
     
     # Default apps
-    alacritty
     fuzzel
     thunar
     thunar-archive-plugin
