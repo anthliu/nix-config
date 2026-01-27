@@ -12,6 +12,10 @@
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
+    extraPackages = with pkgs; [
+      egl-wayland
+      nvidia-vaapi-driver
+    ];
   };
 
   # 3. Load the Nvidia drivers for X11 and Wayland
@@ -31,8 +35,8 @@
     powerManagement.finegrained = false;
 
     # Use the NVidia open source kernel module (not to be confused with Nouveau).
-    # 'false' uses the proprietary kernel module (recommended for stability/performance).
-    open = false;
+    # 'false' uses the proprietary kernel module
+    open = true;
 
     # Enable the Nvidia settings menu (accessible via `nvidia-settings`).
     nvidiaSettings = true;
@@ -41,9 +45,23 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "nvidia";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  };
+
   nixpkgs.overlays = [
     (final: prev: {
       llama-cpp = prev.llama-cpp.override { cudaSupport = true; };
+      
+      firefox = prev.firefox.overrideAttrs (old: {
+        makeWrapperArgs = (old.makeWrapperArgs or []) ++ [
+          "--set" "__EGL_VENDOR_LIBRARY_FILENAMES" "/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json"
+          "--set" "LIBVA_DRIVER_NAME" "nvidia"
+          "--set" "MOZ_DISABLE_RDD_SANDBOX" "1"
+          "--set" "NVD_BACKEND" "direct"
+        ];
+      });
     })
   ];
 }
