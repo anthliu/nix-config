@@ -42,7 +42,7 @@
     nvidiaSettings = true;
 
     # Choose the package version (Stable, Beta, etc.)
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
 
   environment.sessionVariables = {
