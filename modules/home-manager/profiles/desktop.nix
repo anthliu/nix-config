@@ -7,5 +7,6 @@
     ../features/gui/browsers.nix
     ../features/gui/ai.nix
     ../features/gui/terminal.nix
+    ../features/cli/compat.nix
   ];
 }
