@@ -19,7 +19,7 @@ A vibe-coded modular NixOS configuration:
 │   │   ├── desktop/      # System-level DEs (Niri, Gnome)
 │   │   └── services/     # System features (Steam, Stylix)
 │   └── home-manager/     # User environment
-│       ├── features/     # Atomic tool configs (cli/gui)
+│       ├── features/     # Atomic tool configs (vim, niri)
 │       └── profiles/     # Composable bundles (Core, Dev, Desktop)
 └── hosts/                # Machine-specific configurations
     ├── desktop/            # Hostname: desktop

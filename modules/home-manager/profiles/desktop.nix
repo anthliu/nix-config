@@ -1,11 +1,25 @@
-{ ... }:
+{ pkgs, lib, options, ... }:
 
 {
   imports = [
-    ../features/gui/niri.nix
-    ../features/gui/swayidle.nix
-    ../features/gui/browsers.nix
-    ../features/gui/ai.nix
-    ../features/gui/terminal.nix
+    ../features/niri.nix
+    ../features/swayidle.nix
   ];
+
+  programs.alacritty = {
+    enable = true;
+    # Stylix will automatically configure fonts and colors
+  };
+
+  home.packages = [
+    pkgs.antigravity
+  ];
+
+  programs.firefox = {
+    enable = true;
+    profiles.default = {
+      id = 0;
+      isDefault = true;
+    };
+  };
 }

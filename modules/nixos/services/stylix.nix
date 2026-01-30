@@ -1,39 +1,47 @@
-{ pkgs, ... }:
+{ pkgs, lib, options, ... }:
 
 {
-  stylix = {
-    enable = true;
-    image = ../../../assets/wallpaper.png;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
-    
-    # GDM Specific
-    cursor.package = pkgs.adwaita-icon-theme;
-    cursor.name = "Adwaita";
-    cursor.size = 24;
-    
-    fonts = {
-      monospace = {
-        package = pkgs.nerd-fonts.fira-code;
-        name = "FiraCode Nerd Font Mono";
-      };
-      sansSerif = {
-        package = pkgs.inter;
-        name = "Inter";
-      };
-      serif = {
-        package = pkgs.inter;
-        name = "Inter";
-      };
+  config = lib.mkMerge [
+    {
+      stylix = {
+        enable = true;
+        image = ../../../assets/wallpaper.png;
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
+        
+        # GDM Specific
+        cursor.package = pkgs.adwaita-icon-theme;
+        cursor.name = "Adwaita";
+        cursor.size = 24;
+        
+        fonts = {
+          monospace = {
+            package = pkgs.nerd-fonts.fira-code;
+            name = "FiraCode Nerd Font Mono";
+          };
+          sansSerif = {
+            package = pkgs.inter;
+            name = "Inter";
+          };
+          serif = {
+            package = pkgs.inter;
+            name = "Inter";
+          };
 
-      sizes = {
-        terminal = 11;
-        applications = 11;
-        desktop = 11;
-      };
-    };
+          sizes = {
+            terminal = 11;
+            applications = 11;
+            desktop = 11;
+          };
+        };
 
-    # This will apply the background to GDM
-    targets.gnome.enable = true;
-    targets.gtk.enable = true;
-  };
+        # This will apply the background to GDM
+        targets.gnome.enable = true;
+        targets.gtk.enable = true;
+      };
+    }
+
+    (lib.optionalAttrs (options.stylix.targets ? firefox) {
+      stylix.targets.firefox.profileNames = [ "default" ];
+    })
+  ];
 }
