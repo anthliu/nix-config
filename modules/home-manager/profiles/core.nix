@@ -49,5 +49,18 @@
     ripgrep
     jq
     fzf
+    bat
+    eza
+    fd
+    tealdeer
+    ncdu
+    dust
+
+    # Compression Utilities
+    zip
+    unzip
+    p7zip
+    xz
+    zstd
   ];
 }
