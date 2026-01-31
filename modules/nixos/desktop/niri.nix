@@ -47,6 +47,7 @@
     thunar
     thunar-archive-plugin
     thunar-volman
+    xfconf # For GTK settings
     tumbler
     feh
   ];

@@ -62,5 +62,6 @@
     p7zip
     xz
     zstd
+    unrar
   ];
 }
