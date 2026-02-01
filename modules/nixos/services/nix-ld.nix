@@ -14,6 +14,22 @@
     libsecret
     nss
 
+    # for OpenCV / cv2:
+    libSM
+    libICE
+    xorg.libX11
+    xorg.libXext
+    xorg.libXrender
+    xorg.libXfixes
+    xorg.libXcursor
+    xorg.libXcomposite
+    xorg.libXdamage
+    xorg.libXrandr
+    fontconfig
+    freetype
+    libglvnd
+    libxcb
+
     # for JAX/CUDA:
     linuxPackages.nvidia_x11
     # sometimes required:
