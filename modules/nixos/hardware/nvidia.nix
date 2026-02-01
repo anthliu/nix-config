@@ -36,7 +36,7 @@
 
     # Use the NVidia open source kernel module (not to be confused with Nouveau).
     # 'false' uses the proprietary kernel module
-    open = true;
+    open = false;
 
     # Enable the Nvidia settings menu (accessible via `nvidia-settings`).
     nvidiaSettings = true;

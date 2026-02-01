@@ -13,6 +13,7 @@
 
   home.packages = [
     pkgs.antigravity
+    pkgs.google-chrome
   ];
 
   programs.firefox = {
