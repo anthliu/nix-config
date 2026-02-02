@@ -12,6 +12,7 @@
     ../../modules/nixos/services/stylix.nix
     ../../modules/nixos/hardware/openrgb.nix
     ../../modules/nixos/hardware/lact.nix
+    ../../modules/nixos/hardware/swap.nix
     inputs.stylix.nixosModules.stylix
 
 

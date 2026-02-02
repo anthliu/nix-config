@@ -60,7 +60,7 @@
           { proportion = 0.5; }
           { proportion = 0.6; }
         ];
-        default-column-width = { proportion = 0.5; };
+        default-column-width = { proportion = 0.4; };
         focus-ring = {
           width = 4;
           active.color = "hsla(0, 0%, 100%, 0.5)";
