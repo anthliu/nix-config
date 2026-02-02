@@ -14,6 +14,7 @@
   home.packages = [
     pkgs.antigravity
     pkgs.google-chrome
+    pkgs.vlc
   ];
 
   programs.firefox = {
