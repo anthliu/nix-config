@@ -32,6 +32,14 @@
 
     # for JAX/CUDA:
     linuxPackages.nvidia_x11
+    cudaPackages.cuda_nvrtc
+    cudaPackages.libcublas
+    cudaPackages.libcufft
+    cudaPackages.libcurand
+    cudaPackages.libcusolver
+    cudaPackages.libcusparse
+    cudaPackages.cudatoolkit
+
     # sometimes required:
     xorg.libXi
     xorg.libXmu
