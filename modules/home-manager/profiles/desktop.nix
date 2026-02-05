@@ -15,6 +15,7 @@
     pkgs.antigravity
     pkgs.google-chrome
     pkgs.vlc
+    pkgs.shotcut
   ];
 
   programs.firefox = {
