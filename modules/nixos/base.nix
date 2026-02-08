@@ -14,6 +14,13 @@
     keyMap = lib.mkDefault "us";
   };
 
+  # --- Fonts ---
+  fonts.packages = with pkgs; [
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+    noto-fonts-color-emoji
+  ];
+
   # --- Essential Packages ---
   # Every machine you own should have these
   environment.systemPackages = with pkgs; [
