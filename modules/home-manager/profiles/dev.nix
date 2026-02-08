@@ -5,6 +5,7 @@
   ];
 
   home.packages = with pkgs; [
+    gcc
     uv
     qmk
     dos2unix

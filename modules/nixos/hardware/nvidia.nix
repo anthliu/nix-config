@@ -45,6 +45,10 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
+  environment.variables = {
+    TRITON_LIBCUDA_PATH = "/run/opengl-driver/lib";
+  };
+  
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "nvidia";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
