@@ -15,6 +15,7 @@
     claude-code
     gemini-cli
     opencode
+    lmstudio
     nvtopPackages.full
   ];
 }
