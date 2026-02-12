@@ -14,7 +14,6 @@
     ../../modules/nixos/hardware/lact.nix
     ../../modules/nixos/hardware/swap.nix
     ../../modules/nixos/services/remote-access.nix
-    ../../modules/nixos/services/jellyfin.nix
     inputs.stylix.nixosModules.stylix
 
 
