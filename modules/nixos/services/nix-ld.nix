@@ -17,14 +17,14 @@
     # for OpenCV / cv2:
     libSM
     libICE
-    xorg.libX11
-    xorg.libXext
-    xorg.libXrender
-    xorg.libXfixes
-    xorg.libXcursor
-    xorg.libXcomposite
-    xorg.libXdamage
-    xorg.libXrandr
+    libx11
+    libxext
+    libxrender
+    libxfixes
+    libxcursor
+    libxcomposite
+    libxdamage
+    libxrandr
     fontconfig
     freetype
     libglvnd
@@ -41,8 +41,8 @@
     cudaPackages.cudatoolkit
 
     # sometimes required:
-    xorg.libXi
-    xorg.libXmu
+    libxi
+    libxmu
     libGL
   ];
 }
