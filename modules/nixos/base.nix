@@ -29,6 +29,7 @@
     git
     curl
     tmux
+    openssl
   ];
 
   environment.variables.EDITOR = "vim";
