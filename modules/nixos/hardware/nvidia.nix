@@ -1,5 +1,8 @@
 { config, lib, pkgs, ... }:
 
+let
+  gputemps = pkgs.callPackage ../../../packages/gputemps { };
+in
 {
   nix.settings = {
     substituters = [ "https://cache.nixos-cuda.org" ];
@@ -43,6 +46,24 @@
 
     # Choose the package version (Stable, Beta, etc.)
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
+  # --- VRAM Temperature Monitoring ---
+  # These settings are required for the GDDR6 VRAM temperature tool:
+  # https://github.com/ThomasBaruzier/gddr6-core-junction-vram-temps
+  
+  # iomem=relaxed is required to access the GPU memory space via /dev/mem
+  boot.kernelParams = [ "iomem=relaxed" ];
+
+  # pciutils provides libpci.so and lspci, required for the tool to interact with the hardware
+  environment.systemPackages = [ pkgs.pciutils gputemps ];
+
+  # setuid wrapper so gputemps can access /dev/mem without manual sudo
+  security.wrappers.gputemps = {
+    source = "${gputemps}/bin/gputemps";
+    owner = "root";
+    group = "root";
+    setuid = true;
   };
 
   environment.variables = {

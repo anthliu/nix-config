@@ -44,5 +44,6 @@
     libxi
     libxmu
     libGL
+    pciutils
   ];
 }
