@@ -66,6 +66,16 @@ in
     setuid = true;
   };
 
+  # Deploy gputemps DMS-Shell bar widget plugin (only when DMS is enabled)
+  environment.etc = lib.mkIf config.programs.dms-shell.enable (let
+    gputemps-dms-plugin = pkgs.callPackage ../../../packages/gputemps-dms-plugin { };
+  in {
+    "xdg/quickshell/dms-plugins/gpuTemps/plugin.json".source =
+      "${gputemps-dms-plugin}/share/dms-plugins/gpuTemps/plugin.json";
+    "xdg/quickshell/dms-plugins/gpuTemps/GpuTempsWidget.qml".source =
+      "${gputemps-dms-plugin}/share/dms-plugins/gpuTemps/GpuTempsWidget.qml";
+  });
+
   environment.variables = {
     TRITON_LIBCUDA_PATH = "/run/opengl-driver/lib";
   };

@@ -1,0 +1,13 @@
+{
+    "id": "gpuTemps",
+    "name": "GPU Temps",
+    "description": "Display NVIDIA GPU core, junction, and VRAM temperatures",
+    "version": "1.0.0",
+    "author": "anthliu",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./GpuTempsWidget.qml",
+    "icon": "device_thermostat",
+    "requires": ["gputemps"],
+    "permissions": ["process"]
+}
