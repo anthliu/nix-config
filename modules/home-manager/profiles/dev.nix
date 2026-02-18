@@ -9,6 +9,7 @@
     uv
     qmk
     dos2unix
+    (python313.withPackages (ps: [ ps.tkinter ]))
 
     # AI Tools
     llama-cpp
