@@ -12,7 +12,7 @@
   };
 
   home.packages = [
-    pkgs.antigravity
+    pkgs.antigravity-fhs
     pkgs.google-chrome
     pkgs.vlc
     pkgs.shotcut
