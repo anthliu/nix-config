@@ -20,30 +20,27 @@
     enable = true;
 
     # If you find SSH stops working for other servers, comment this line out.
-    enableDefaultConfig = false; 
+    # enableDefaultConfig = false; 
 
     matchBlocks = {
-      # Settings here apply to every SSH connection
-      "*" = {
-        # Using 'extraOptions' ensures it writes the raw config line safely.
-        extraOptions = {
-          AddKeysToAgent = "yes";
-        };
-      };
-
       "github.com" = {
         hostname = "github.com";
         user = "git";
-        identityFile = "${config.home.homeDirectory}/.ssh/id_ed25519"; 
+        identityFile = "~/.ssh/id_ed25519"; 
+        identitiesOnly = true;
       };
     };
+
   };
+
+  home.file.".ssh/id_ed25519.pub".text = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAyF+oMBRjYwqIO7JLZ/YzefHDbRsrW3LouCCI/RJ5Ws anthzliu@gmail.com";
 
   home.packages = with pkgs; [
     # Basic Utilities
     htop
     fastfetch
     tree
+    ffmpeg
     
     # Modern CLI Tools
     ripgrep
