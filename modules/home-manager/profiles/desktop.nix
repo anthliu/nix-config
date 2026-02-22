@@ -1,4 +1,4 @@
-{ pkgs, lib, options, ... }:
+{ pkgs, inputs, lib, options, ... }:
 
 {
   imports = [
@@ -12,7 +12,7 @@
   };
 
   home.packages = [
-    pkgs.antigravity-fhs
+    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
     pkgs.google-chrome
     pkgs.vlc
     pkgs.shotcut
