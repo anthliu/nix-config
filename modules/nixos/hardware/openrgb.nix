@@ -6,7 +6,12 @@ let
     # Wait for the server to be ready and have devices
     # We try a few times in case the server is slow to find the HID devices
     for i in 1 2 3 4 5; do
-      ${pkgs.openrgb}/bin/openrgb --mode static --color 000000 && exit 0
+      # Attempt to turn off devices using both common 'off' methods.
+      # 1. 'Off' mode (used by EVGA 3090 and others)
+      # 2. 'static' mode with black color (used by Gigabyte and others)
+      # We silence output because each command will likely fail on some devices.
+      ${pkgs.openrgb}/bin/openrgb --mode Off --noautoconnect >/dev/null 2>&1 || true
+      ${pkgs.openrgb}/bin/openrgb --mode static --color 000000 --noautoconnect >/dev/null 2>&1 && exit 0
       sleep 2
     done
     exit 1
@@ -39,7 +44,7 @@ in
       Restart = "on-failure";
       RestartSec = "1s";
     };
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = [ "multi-user.target" "post-resume.target" ];
   };
 
   environment.systemPackages = [
