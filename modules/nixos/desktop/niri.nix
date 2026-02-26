@@ -2,7 +2,14 @@
 
 {
   # --- Niri & DMS ---
-  programs.niri.enable = true;
+  programs.niri = {
+    enable = true;
+    package = inputs.niri.packages.${pkgs.system}.niri-unstable.overrideAttrs (old: {
+      patches = (old.patches or []) ++ [
+        ../../../patches/niri-middle-click-drag.patch
+      ];
+    });
+  };
   programs.dms-shell = {
     enable = true;
     systemd = {

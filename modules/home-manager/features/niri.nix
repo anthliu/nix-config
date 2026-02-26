@@ -5,6 +5,11 @@
 
   programs.niri = {
     enable = true;
+    package = inputs.niri.packages.${pkgs.system}.niri-unstable.overrideAttrs (old: {
+      patches = (old.patches or []) ++ [
+        ../../../patches/niri-middle-click-drag.patch
+      ];
+    });
     settings = {
       input = {
         keyboard = {
