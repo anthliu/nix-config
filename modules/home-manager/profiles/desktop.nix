@@ -8,6 +8,11 @@
 
   programs.alacritty = {
     enable = true;
+    settings = {
+      window = {
+        decorations = "none";
+      };
+    };
     # Stylix will automatically configure fonts and colors
   };
 

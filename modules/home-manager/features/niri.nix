@@ -5,7 +5,7 @@
 
   programs.niri = {
     enable = true;
-    package = inputs.niri.packages.${pkgs.system}.niri-unstable.overrideAttrs (old: {
+    package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable.overrideAttrs (old: {
       patches = (old.patches or []) ++ [
         ../../../patches/niri-middle-click-drag.patch
       ];

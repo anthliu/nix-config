@@ -20,7 +20,7 @@
     enable = true;
 
     # If you find SSH stops working for other servers, comment this line out.
-    # enableDefaultConfig = false; 
+    enableDefaultConfig = false; 
 
     matchBlocks = {
       "github.com" = {
