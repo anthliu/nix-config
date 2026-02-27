@@ -12,30 +12,68 @@ in
         shift
       fi
 
-      was_active=0
-      if systemctl --user is-active --quiet swayidle; then
-        was_active=1
-        systemctl --user stop swayidle
+      STATE_DIR="/run/user/$(id -u)/caffeinate"
+      mkdir -p "$STATE_DIR"
+
+      if [ "$allow_display_sleep" -eq 1 ]; then
+        MY_FILE="$STATE_DIR/$$"
+      else
+        MY_FILE="$STATE_DIR/$$.full"
       fi
 
-      temp_swayidle_pid=""
-      if [ "$allow_display_sleep" -eq 1 ]; then
-        # Run a temporary swayidle that ONLY handles display power
-        ${pkgs.swayidle}/bin/swayidle -w \
-          timeout 300 '${display "off"}' \
-          resume '${display "on"}' &
-        temp_swayidle_pid=$!
-      fi
+      update_state() {
+        (
+          flock 9
+          
+          # Clean up dead PIDs
+          for f in "$STATE_DIR"/*; do
+            if [ -f "$f" ]; then
+              fname=$(basename "$f")
+              if [ "$fname" = ".lock" ]; then continue; fi
+              # Extract PID (everything before the first dot, if any)
+              pid=''${fname%%.*}
+              if ! kill -0 "$pid" 2>/dev/null && [ "$pid" != "$$" ]; then
+                rm -f "$f"
+              fi
+            fi
+          done
+
+          has_full=0
+          has_sys=0
+          
+          for f in "$STATE_DIR"/*; do
+            if [ -f "$f" ]; then
+              fname=$(basename "$f")
+              if [ "$fname" = ".lock" ]; then continue; fi
+              if [[ "$fname" == *.full ]]; then
+                has_full=1
+              else
+                has_sys=1
+              fi
+            fi
+          done
+
+          if [ "$has_full" -eq 1 ]; then
+            systemctl --user stop caffeinate-display.service
+            systemctl --user stop swayidle.service
+          elif [ "$has_sys" -eq 1 ]; then
+            systemctl --user start caffeinate-display.service
+            systemctl --user stop swayidle.service
+          else
+            systemctl --user stop caffeinate-display.service
+            systemctl --user start swayidle.service
+          fi
+        ) 9> "$STATE_DIR/.lock"
+      }
 
       cleanup() {
-        if [ -n "$temp_swayidle_pid" ]; then
-          kill "$temp_swayidle_pid" 2>/dev/null
-        fi
-        if [ "$was_active" -eq 1 ]; then
-          systemctl --user start swayidle
-        fi
+        rm -f "$MY_FILE"
+        update_state
       }
+
+      touch "$MY_FILE"
       trap cleanup EXIT
+      update_state
 
       if [ $# -eq 0 ]; then
         echo "Caffeinated. Press Ctrl+C to stop."
@@ -59,5 +97,14 @@ in
         command = "${pkgs.systemd}/bin/systemctl suspend";
       }
     ];
+  };
+
+  systemd.user.services.caffeinate-display = {
+    Unit = {
+      Description = "Caffeinate display-only idle manager";
+    };
+    Service = {
+      ExecStart = "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${display "off"}' resume '${display "on"}'";
+    };
   };
 }
