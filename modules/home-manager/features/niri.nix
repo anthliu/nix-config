@@ -108,6 +108,14 @@
         }
         {
           matches = [ 
+            { app-id = "^mpv$"; }
+            { app-id = "^umpv$"; }
+            { app-id = "^vlc$"; }
+          ];
+          default-column-width = {};
+        }
+        {
+          matches = [ 
             { app-id = "firefox$"; title = "^Picture-in-Picture$"; } 
           ];
           open-floating = true;

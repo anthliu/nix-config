@@ -24,6 +24,14 @@
     pkgs.shotcut
   ];
 
+  programs.mpv = {
+    enable = true;
+    config = {
+      autofit-larger = "100%x100%";
+      loop-file = "inf";
+    };
+  };
+
   programs.firefox = {
     enable = true;
     profiles.default = {
