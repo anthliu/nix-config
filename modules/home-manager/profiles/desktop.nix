@@ -20,6 +20,7 @@
     inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
     pkgs.google-chrome
     pkgs.vlc
+    pkgs.discord
     pkgs.shotcut
   ];
 
