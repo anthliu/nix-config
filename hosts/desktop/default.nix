@@ -13,6 +13,7 @@
     ../../modules/nixos/hardware/openrgb.nix
     ../../modules/nixos/hardware/lact.nix
     ../../modules/nixos/hardware/swap.nix
+    ../../modules/nixos/hardware/drives.nix
     ../../modules/nixos/services/remote-access.nix
     inputs.stylix.nixosModules.stylix
 

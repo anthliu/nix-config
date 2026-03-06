@@ -38,6 +38,7 @@
   # Niri doesn't come with a notification daemon, Mako is recommended
   environment.systemPackages = with pkgs; [
     xwayland-satellite
+    playerctl
     mako
     libnotify # For notify-send
     
