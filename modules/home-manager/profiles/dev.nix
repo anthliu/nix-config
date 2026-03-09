@@ -18,5 +18,8 @@
     opencode
     lmstudio
     nvtopPackages.full
+
+    # LaTeX (CLI tools: pdflatex, xelatex, bibtex, latexmk, etc.)
+    texliveMedium
   ];
 }
