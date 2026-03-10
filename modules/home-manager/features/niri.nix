@@ -129,6 +129,7 @@
 
         "Mod+T".action = spawn "foot";
         "Mod+D".action = spawn "fuzzel";
+        "Mod+E".action = spawn "thunar";
 
         "Super+Alt+S".action = spawn-sh "pkill orca || exec orca";
 

@@ -35,9 +35,7 @@
     pkgs.shotcut
   ];
 
-  home.shellAliases = {
-    igpu-chrome = "env LIBVA_DRIVER_NAME=radeonsi __EGL_VENDOR_LIBRARY_FILENAMES=/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json __GLX_VENDOR_LIBRARY_NAME=mesa google-chrome-stable --render-node-override=/dev/dri/renderD129";
-  };
+
 
   programs.mpv = {
     enable = true;

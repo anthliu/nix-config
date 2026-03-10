@@ -15,7 +15,11 @@
 
       " === UI & Appearance ===
       syntax on
-      set guifont=Monospace:h10
+      if has("mac") || has("win32")
+        set guifont=Monospace:h10
+      else
+        set guifont=Monospace\ 10
+      endif
       filetype plugin indent on
       set number
       set relativenumber
