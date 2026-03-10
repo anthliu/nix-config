@@ -127,7 +127,7 @@
       in {
         "Mod+Shift+Slash".action = show-hotkey-overlay;
 
-        "Mod+T".action = spawn "alacritty";
+        "Mod+T".action = spawn "foot";
         "Mod+D".action = spawn "fuzzel";
 
         "Super+Alt+S".action = spawn-sh "pkill orca || exec orca";

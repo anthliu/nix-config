@@ -5,6 +5,8 @@
     ../features/vim.nix
   ];
 
+  programs.bash.enable = true;
+
   programs.git = {
     enable = true;
     
