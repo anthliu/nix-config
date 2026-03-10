@@ -33,6 +33,7 @@
     curl
     tmux
     openssl
+    gnumake
   ];
 
   environment.variables.EDITOR = "vim";

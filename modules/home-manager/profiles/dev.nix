@@ -19,7 +19,8 @@
     lmstudio
     nvtopPackages.full
 
-    # LaTeX (CLI tools: pdflatex, xelatex, bibtex, latexmk, etc.)
-    texliveMedium
+    # LaTeX (CLI tools: full install to include enumitem, etc.)
+    texliveFull
+    poppler-utils # utils for agents to read pdf
   ];
 }

@@ -58,6 +58,7 @@
     xfconf # For GTK settings
     tumbler
     feh
+    zathura # pdf reader
   ];
 
   # --- Services ---
