@@ -3,17 +3,18 @@
 let
   no-rgb = pkgs.writeScriptBin "no-rgb" ''
     #!/bin/sh
-    # Wait for the server to be ready and have devices
-    # We try a few times in case the server is slow to find the HID devices
-    for i in 1 2 3 4 5; do
-      # Attempt to turn off devices using both common 'off' methods.
-      # 1. 'Off' mode (used by EVGA 3090 and others)
-      # 2. 'static' mode with black color (used by Gigabyte and others)
-      # We silence output because each command will likely fail on some devices.
-      ${pkgs.openrgb}/bin/openrgb --mode Off --noautoconnect >/dev/null 2>&1 || true
-      ${pkgs.openrgb}/bin/openrgb --mode static --color 000000 --noautoconnect >/dev/null 2>&1 && exit 0
-      sleep 2
-    done
+    # Attempt to turn off devices using both common 'off' methods.
+    # 1. 'Off' mode (used by EVGA 3090 and others)
+    # 2. 'Static' mode with black color (used by Gigabyte and others)
+    # the server handles device detection, so we connect instead of using --noautoconnect
+    ${pkgs.openrgb}/bin/openrgb --mode Off >/dev/null 2>&1 || true
+    ${pkgs.openrgb}/bin/openrgb --mode Static --color 000000 >/dev/null 2>&1 || true
+
+    # Only exit successfully if the motherboard was actually found and commanded.
+    # Otherwise, systemd will retry based on Restart=on-failure.
+    if ${pkgs.openrgb}/bin/openrgb --list-devices | grep -q "B650 GAMING X AX V2"; then
+      exit 0
+    fi
     exit 1
   '';
 in
