@@ -10,9 +10,10 @@ let
     ${pkgs.openrgb}/bin/openrgb --mode Off >/dev/null 2>&1 || true
     ${pkgs.openrgb}/bin/openrgb --mode Static --color 000000 >/dev/null 2>&1 || true
 
-    # Only exit successfully if the motherboard was actually found and commanded.
+    # Only exit successfully if the motherboard and GPU were actually found and commanded.
     # Otherwise, systemd will retry based on Restart=on-failure.
-    if ${pkgs.openrgb}/bin/openrgb --list-devices | grep -q "B650 GAMING X AX V2"; then
+    if ${pkgs.openrgb}/bin/openrgb --list-devices | grep -q "B650 GAMING X AX V2" && \
+       ${pkgs.openrgb}/bin/openrgb --list-devices | grep -i -q "EVGA"; then
       exit 0
     fi
     exit 1
