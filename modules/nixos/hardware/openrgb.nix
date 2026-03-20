@@ -3,19 +3,20 @@
 let
   no-rgb = pkgs.writeScriptBin "no-rgb" ''
     #!/bin/sh
-    # Attempt to turn off devices using both common 'off' methods.
-    # 1. 'Off' mode (used by EVGA 3090 and others)
-    # 2. 'Static' mode with black color (used by Gigabyte and others)
-    # the server handles device detection, so we connect instead of using --noautoconnect
-    ${pkgs.openrgb}/bin/openrgb --mode Off >/dev/null 2>&1 || true
-    ${pkgs.openrgb}/bin/openrgb --mode Static --color 000000 >/dev/null 2>&1 || true
-
-    # Only exit successfully if the motherboard and GPU were actually found and commanded.
-    # Otherwise, systemd will retry based on Restart=on-failure.
-    if ${pkgs.openrgb}/bin/openrgb --list-devices | grep -q "B650 GAMING X AX V2" && \
-       ${pkgs.openrgb}/bin/openrgb --list-devices | grep -i -q "EVGA"; then
-      exit 0
-    fi
+    # Give the hardware a moment to wake up
+    sleep 3
+    for i in 1 2 3 4 5; do
+      # Attempt to turn off devices
+      ${pkgs.openrgb}/bin/openrgb --mode Off >/dev/null 2>&1
+      ${pkgs.openrgb}/bin/openrgb --mode Static --color 000000 >/dev/null 2>&1
+      
+      # Check if both motherboard and GPU are detected AND the command worked
+      if ${pkgs.openrgb}/bin/openrgb --list-devices | grep -q "B650 GAMING X AX V2" && \
+         ${pkgs.openrgb}/bin/openrgb --list-devices | grep -i -q "EVGA"; then
+        exit 0
+      fi
+      sleep 2
+    done
     exit 1
   '';
 in
