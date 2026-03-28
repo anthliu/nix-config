@@ -262,6 +262,7 @@
         "Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
         "Mod+W".action = toggle-column-tabbed-display;
 
+        "Mod+S".action = spawn "niri" "msg" "action" "screenshot";
         "Print".action = spawn "niri" "msg" "action" "screenshot";
         "Ctrl+Print".action = spawn "niri" "msg" "action" "screenshot";
         "Alt+Print".action = spawn "niri" "msg" "action" "screenshot";
