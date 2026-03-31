@@ -3,6 +3,12 @@
 {
   imports = [ inputs.niri.homeModules.niri ];
 
+  # Set idle display commands for swayidle
+  custom.idle = {
+    displayOffCommand = "${pkgs.niri}/bin/niri msg action power-off-monitors";
+    displayOnCommand = "${pkgs.niri}/bin/niri msg action power-on-monitors";
+  };
+
   programs.niri = {
     enable = true;
     package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable.overrideAttrs (old: {

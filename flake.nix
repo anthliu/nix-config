@@ -17,6 +17,10 @@
     };
 
     niri.url = "github:sodiboo/niri-flake";
+    mango = {
+      url = "github:mangowm/mango";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     stylix.url = "github:danth/stylix";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     antigravity-nix = {

@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../features/niri.nix
+    ../features/mango.nix
     ../features/swayidle.nix
   ];
 
@@ -27,8 +27,18 @@
     # Stylix will automatically configure fonts and colors
   };
 
-  home.packages = [
-    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+  home.packages = let
+    antigravity-wrapped = pkgs.symlinkJoin {
+      name = "antigravity";
+      paths = [ inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.default ];
+      buildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/antigravity \
+          --add-flags "--disable-gpu"
+      '';
+    };
+  in [
+    antigravity-wrapped
     pkgs.google-chrome
     pkgs.vlc
     pkgs.discord
