@@ -17,53 +17,72 @@
       env=ELECTRON_OZONE_PLATFORM_HINT,auto
 
       # === Effects ===
-      blur=0
+      blur=1
+      blur_optimized=1
+      blur_params_num_passes=1
+      blur_params_radius=5
+
       shadows=1
       shadow_only_floating=1
-      shadows_size=12
+      shadows_size=10
       shadows_blur=15
       shadows_position_x=0
       shadows_position_y=0
-      shadowscolor=0x000000ff
+      # shadowscolor=0x000000ff
 
-      border_radius=12
+      border_radius=10
       focused_opacity=1.0
       unfocused_opacity=0.9
 
       # === Animations ===
+      # animations=1
+      # layer_animations=1
+      # animation_type_open=zoom
+      # animation_type_close=slide
+      # layer_animation_type_open=slide
+      # layer_animation_type_close=slide
+      # animation_fade_in=1
+      # animation_fade_out=1
+      # tag_animation_direction=1
+      # zoom_initial_ratio=0.4
+      # zoom_end_ratio=0.7
+      # animation_duration_move=500
+      # animation_duration_open=400
+      # animation_duration_tag=350
+      # animation_duration_close=800
+      # animation_duration_focus=400
+      # animation_curve_open=0.46,1.0,0.29,1.1
+      # animation_curve_move=0.46,1.0,0.29,1
+      # animation_curve_tag=0.46,1.0,0.29,1
+      # animation_curve_close=0.08,0.92,0,1
+      # animation_curve_focus=0.46,1.0,0.29,1
+
+      # fast and snappy animation preset
       animations=1
-      layer_animations=1
       animation_type_open=zoom
-      animation_type_close=slide
-      layer_animation_type_open=slide
-      layer_animation_type_close=slide
-      animation_fade_in=1
-      animation_fade_out=1
-      tag_animation_direction=1
-      zoom_initial_ratio=0.4
-      zoom_end_ratio=0.7
-      animation_duration_move=500
-      animation_duration_open=400
-      animation_duration_tag=350
-      animation_duration_close=800
-      animation_duration_focus=400
-      animation_curve_open=0.46,1.0,0.29,1.1
-      animation_curve_move=0.46,1.0,0.29,1
-      animation_curve_tag=0.46,1.0,0.29,1
-      animation_curve_close=0.08,0.92,0,1
-      animation_curve_focus=0.46,1.0,0.29,1
+      animation_type_close=zoom
+      animation_duration_open=200
+      animation_duration_close=200
+      zoom_initial_ratio=0.8
+      animation_curve_open=0.0,0.0,0.58,1.0
+      animation_curve_close=0.42,0.0,1.0,1.0
+
 
       # === Layout ===
+      tagrule=id:1,layout_name:scroller
       scroller_structs=20
-      scroller_default_proportion=0.8
+      scroller_default_proportion=0.4
       scroller_focus_center=0
-      scroller_prefer_center=1
+      scroller_prefer_center=0
       scroller_default_proportion_single=1.0
-      scroller_proportion_preset=0.5,0.8,1.0
-
+      edge_scroller_pointer_focus=1
+      scroller_proportion_preset=0.6,0.5,0.4
+      bind=SUPER,f,set_proportion,1.0
+      bind=SUPER,r,switch_proportion_preset,
+      
       new_is_master=1
       smartgaps=0
-      default_mfact=0.55
+      default_mfact=0.6
       default_nmaster=1
 
       # === Overview ===
@@ -75,7 +94,7 @@
 
       # === Misc ===
       xwayland_persistence=1
-      syncobj_enable=0
+      syncobj_enable=1
       focus_on_activate=1
       sloppyfocus=1
       warpcursor=1
@@ -115,18 +134,21 @@
       # Dell AW3423DWF (ultrawide)
       monitorrule=make:Dell Inc.,model:AW3423DWF,width:3440,height:1440,refresh:165,x:0,y:0,scale:1,vrr:0,rr:0
       # Samsung Odyssey G81SF
-      monitorrule=make:Samsung Electric Company,model:Odyssey G81SF,width:3840,height:2160,refresh:240,x:3440,y:0,scale:1.25,vrr:0,rr:0
+      monitorrule=make:Samsung Electric Company,model:Odyssey G81SF,width:3840,height:2160,refresh:240,x:3440,y:0,scale:1,vrr:0,rr:0
 
       # === Keybindings ===
       # Uses Super as the preferred modifier, staying close to mango defaults
 
       # Terminal and launcher
-      bind=SUPER,Return,spawn,foot
-      bind=SUPER,space,spawn,fuzzel
+      bind=SUPER,t,spawn,foot
+      bind=SUPER,d,spawn,fuzzel
       bind=SUPER,e,spawn,thunar
 
       # Quit mango
-      bind=SUPER,m,quit
+      bind=SUPER+SHIFT,m,quit
+
+      # Reload config
+      bind=SUPER+SHIFT,r,reload_config
 
       # Kill client
       bind=SUPER,q,killclient,
@@ -145,26 +167,26 @@
 
       # Focus stack
       bind=SUPER,Tab,focusstack,next
-      bind=SUPER,u,focuslast
+      #bind=SUPER,u,focuslast
 
       # Swap windows
-      bind=SUPER+SHIFT,Left,exchange_client,left
-      bind=SUPER+SHIFT,Right,exchange_client,right
-      bind=SUPER+SHIFT,Up,exchange_client,up
-      bind=SUPER+SHIFT,Down,exchange_client,down
-      bind=SUPER+SHIFT,h,exchange_client,left
-      bind=SUPER+SHIFT,l,exchange_client,right
-      bind=SUPER+SHIFT,k,exchange_client,up
-      bind=SUPER+SHIFT,j,exchange_client,down
+      bind=SUPER+CTRL,Left,exchange_client,left
+      bind=SUPER+CTRL,Right,exchange_client,right
+      bind=SUPER+CTRL,Up,exchange_client,up
+      bind=SUPER+CTRL,Down,exchange_client,down
+      bind=SUPER+CTRL,h,exchange_client,left
+      bind=SUPER+CTRL,l,exchange_client,right
+      bind=SUPER+CTRL,k,exchange_client,up
+      bind=SUPER+CTRL,j,exchange_client,down
 
       # Window states
-      bind=SUPER,f,togglefullscreen,
-      bind=SUPER+SHIFT,f,togglefakefullscreen,
-      bind=SUPER,backslash,togglefloating,
-      bind=SUPER,a,togglemaximizescreen,
-      bind=SUPER,o,toggleoverlay,
+      #bind=SUPER,f,togglefullscreen,
+      #bind=SUPER+SHIFT,f,togglefakefullscreen,
+      bind=SUPER,v,togglefloating,
+      #bind=SUPER,a,togglemaximizescreen,
+      #bind=SUPER,o,toggleoverlay,
       bind=SUPER,g,toggleglobal,
-      bind=SUPER,i,minimized,
+      #bind=SUPER,i,minimized,
       bind=SUPER+SHIFT,i,restore_minimized
 
       # Overview
@@ -173,8 +195,7 @@
       # Scratchpad
       bind=SUPER,z,toggle_scratchpad
 
-      # Scroller layout controls
-      bind=SUPER+CTRL,x,switch_proportion_preset,
+
 
       # Tile layout controls
       bind=SUPER+CTRL,e,incnmaster,1
@@ -185,6 +206,8 @@
       bind=SUPER,n,switch_layout
 
       # Tag switching (Ctrl+1-9 to view tag, Super+1-9 to toggleview)
+      bind=SUPER,y,viewtoleft,0
+      bind=SUPER,o,viewtoright,0
       bind=Ctrl,1,view,1,0
       bind=Ctrl,2,view,2,0
       bind=Ctrl,3,view,3,0
@@ -196,6 +219,8 @@
       bind=Ctrl,9,view,9,0
 
       # Move window to tag
+      bind=SUPER+CTRL,y,tagtoleft,0
+      bind=SUPER+CTRL,o,tagtoright,0
       bind=SUPER+CTRL,1,tag,1,0
       bind=SUPER+CTRL,2,tag,2,0
       bind=SUPER+CTRL,3,tag,3,0
@@ -249,7 +274,7 @@
       bind=none,XF86AudioNext,spawn,playerctl next
 
       # Screenshot
-      bind=SUPER,p,spawn_shell,grim -g "$(slurp)" - | wl-copy
+      bind=SUPER,s,spawn_shell,grim -g "$(slurp)" - | wl-copy
       bind=none,Print,spawn_shell,grim - | wl-copy
 
       # Mouse bindings
