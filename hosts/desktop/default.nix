@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/nixos/base.nix
-    ../../modules/nixos/desktop/mango.nix
+    ../../modules/nixos/desktop/niri.nix
     inputs.dms.nixosModules.default
     ../../modules/nixos/hardware/nvidia.nix
     ../../modules/nixos/services/steam.nix

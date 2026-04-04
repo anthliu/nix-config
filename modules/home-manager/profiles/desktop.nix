@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../features/mango.nix
+    ../features/niri.nix
     ../features/swayidle.nix
   ];
 
