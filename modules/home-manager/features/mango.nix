@@ -295,11 +295,16 @@
     '';
 
     autostart_sh = ''
-      # Give compositor a moment to fully initialize
-      # sleep 1
-      # Start DMS shell (fallback in case systemd target doesn't trigger it)
-      dms run &
+      # Synchronize the full user environment with the systemd session bus.
+      # This ensures dms.service knows who you are and where your display is.
+      dbus-update-activation-environment --systemd --all
+
+
+      # Start the standard graphical session target
+      # This automatically triggers dms.service and other session-dependent units
+      systemctl --user start graphical-session.target
     '';
+
   };
 
   # Set idle display commands for swayidle

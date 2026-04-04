@@ -31,6 +31,24 @@
     enableCalendarEvents = true;
   };
 
+  # Fix: Ensure DMS can find quickshell (qs) and system utilities
+  # We use the standard NixOS 'path' attribute which appends to the unit environment
+  systemd.user.services.dms = {
+    path = with pkgs; [
+      quickshell
+      bash
+      coreutils
+      gnugrep
+      procps
+      which
+      "/run/wrappers"
+    ];
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig.StartLimitBurst = 10;
+  };
+
+
   # --- Display Manager (GDM) ---
   services.xserver.enable = true;
   services.displayManager.gdm = {
@@ -44,7 +62,9 @@
 
   # --- Notification Daemon (Mako) ---
   environment.systemPackages = with pkgs; [
+    quickshell # Needed for the DMS shell UI components
     xwayland-satellite
+
     playerctl
     mako
     libnotify # For notify-send
