@@ -13,7 +13,7 @@
 
     # AI Tools
     llama-cpp
-    claude-code
+    # claude-code
     gemini-cli
     opencode
     lmstudio
