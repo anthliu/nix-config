@@ -5,19 +5,19 @@
   # This is much faster than disk swap and effectively increases your usable RAM.
   zramSwap.enable = true;
 
-  # Add a 16GB swap file for extreme cases (OOM prevention)
+  # Small swapfile as a last-resort OOM safety net.
+  # zram handles everyday memory pressure; this only kicks in when zram is exhausted.
   # Since we are on Btrfs, NixOS will handle the 'nocow' attribute automatically.
   swapDevices = [
     {
       device = "/var/lib/swapfile";
-      size = 64 * 1024; # 64GB
+      size = 8 * 1024; # 8GB
     }
   ];
 
   # Performance tuning for swap
   boot.kernel.sysctl = {
-    # Increase swappiness to prefer zram over disk swap (initially)
-    # Higher values make the kernel more aggressive at swapping.
-    "vm.swappiness" = 100;
+    # Low swappiness: strongly prefer RAM/zram, only fall back to disk swap as a last resort.
+    "vm.swappiness" = 10;
   };
 }
