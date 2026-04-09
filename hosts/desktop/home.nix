@@ -18,7 +18,7 @@
     inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.home-manager
 
     # Hardware-specific packages
-    (writeShellScriptBin "igpu-chrome" ''
+    (writeShellScriptBin "google-chrome-igpu" ''
       exec env LIBVA_DRIVER_NAME=radeonsi \
         __EGL_VENDOR_LIBRARY_FILENAMES=/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json \
         __GLX_VENDOR_LIBRARY_NAME=mesa \
@@ -31,6 +31,32 @@
         "$@"
     '')
   ];
+
+  xdg.desktopEntries = {
+    google-chrome-igpu = {
+      name = "Google Chrome (iGPU)";
+      genericName = "Web Browser";
+      exec = "google-chrome-igpu %U";
+      icon = "google-chrome";
+      terminal = false;
+      categories = [ "Network" "WebBrowser" ];
+      mimeType = [
+        "text/html"
+        "text/xml"
+        "application/xhtml+xml"
+        "application/x-mimearchive"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+      ];
+    };
+    slay-the-spire-2 = {
+      name = "Slay the Spire 2";
+      exec = "steam steam://rungameid/2868840";
+      icon = "steam_icon_2868840";
+      terminal = false;
+      categories = [ "Game" ];
+    };
+  };
 
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
