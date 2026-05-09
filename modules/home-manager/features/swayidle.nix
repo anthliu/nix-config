@@ -98,6 +98,10 @@ in
 
     services.swayidle = {
       enable = true;
+      events = [
+        { event = "before-sleep"; command = displayOn; }
+        { event = "after-resume"; command = displayOn; }
+      ];
       timeouts = [
         {
           timeout = 300; # 5 minutes
@@ -116,7 +120,7 @@ in
         Description = "Caffeinate display-only idle manager";
       };
       Service = {
-        ExecStart = "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${displayOff}' resume '${displayOn}'";
+        ExecStart = "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${displayOff}' resume '${displayOn}' before-sleep '${displayOn}' after-resume '${displayOn}'";
       };
     };
   };
