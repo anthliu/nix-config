@@ -105,10 +105,10 @@ in
       # pipeline is active when nvidia-suspend serializes state.
       # See: https://github.com/niri-wm/niri/issues/2139
       # TODO: Remove when niri handles DRM resume errors gracefully (retry page flips).
-      events = [
-        { event = "before-sleep"; command = displayOn; }
-        { event = "after-resume"; command = displayOn; }
-      ];
+      events = {
+        before-sleep = displayOn;
+        after-resume = displayOn;
+      };
       timeouts = [
         {
           timeout = 300; # 5 minutes
