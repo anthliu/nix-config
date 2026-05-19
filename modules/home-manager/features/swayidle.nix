@@ -98,6 +98,13 @@ in
 
     services.swayidle = {
       enable = true;
+      # WORKAROUND(nvidia-resume race): nvidia-resume.service takes ~2s after wake
+      # to restore the GPU. Logind unfreezes niri before it finishes, causing
+      # "Page flip commit failed (Permission denied)" which can corrupt niri's
+      # idle notification state. Powering on monitors before sleep ensures the DRM
+      # pipeline is active when nvidia-suspend serializes state.
+      # See: https://github.com/niri-wm/niri/issues/2139
+      # TODO: Remove when niri handles DRM resume errors gracefully (retry page flips).
       events = [
         { event = "before-sleep"; command = displayOn; }
         { event = "after-resume"; command = displayOn; }
@@ -120,6 +127,7 @@ in
         Description = "Caffeinate display-only idle manager";
       };
       Service = {
+        # WORKAROUND(nvidia-resume race): Same as above.
         ExecStart = "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${displayOff}' resume '${displayOn}' before-sleep '${displayOn}' after-resume '${displayOn}'";
       };
     };
