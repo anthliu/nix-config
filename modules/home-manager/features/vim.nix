@@ -68,6 +68,7 @@
 
       " === Autocmds ===
       autocmd BufNewFile,BufRead *.tex set syntax=context
+      autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4
     '';
   };
 
