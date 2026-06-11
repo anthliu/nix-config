@@ -2,7 +2,7 @@ diff --git a/src/input/mod.rs b/src/input/mod.rs
 index ab31df94..1bbee77a 100644
 --- a/src/input/mod.rs
 +++ b/src/input/mod.rs
-@@ -2845,7 +2845,7 @@ impl State {
+@@ -2838,7 +2838,7 @@ impl State {
                      self.niri
                          .layout
                          .view_offset_gesture_begin(&output, Some(ws_idx), false);
@@ -11,26 +11,25 @@ index ab31df94..1bbee77a 100644
                      pointer.set_grab(self, grab, serial, Focus::Clear);
                      self.niri
                          .cursor_manager
-@@ -2858,8 +2858,7 @@ impl State {
+@@ -2850,7 +2850,7 @@ impl State {
+                 }
              }
- 
-             if button == Some(MouseButton::Middle) && !pointer.is_grabbed() {
--                let mod_down = modifiers_from_state(mods).contains(mod_key.to_modifiers());
--                if mod_down {
-+                if true {
-                     let output_ws = if is_overview_open {
-                         self.niri.workspace_under_cursor(true)
-                     } else {
-@@ -2882,7 +2881,7 @@ impl State {
-                             button: button_code,
-                             location,
-                         };
--                        let grab = SpatialMovementGrab::new(start_data, output, ws_id, false);
-+                        let grab = SpatialMovementGrab::new(start_data, event.time_msec(), output, ws_id, false);
-                         pointer.set_grab(self, grab, serial, Focus::Clear);
-                         self.niri
-                             .cursor_manager
-@@ -3078,6 +3077,28 @@ impl State {
+
+-            if button == Some(MouseButton::Middle) && !pointer.is_grabbed() && mod_down {
++            if button == Some(MouseButton::Middle) && !pointer.is_grabbed() {
+                 let output_ws = if is_overview_open {
+                     self.niri.workspace_under_cursor(true)
+                 } else {
+@@ -2873,7 +2873,7 @@ impl State {
+                         button: button_code,
+                         location,
+                     };
+-                    let grab = SpatialMovementGrab::new(start_data, output, ws_id, false);
++                    let grab = SpatialMovementGrab::new(start_data, event.time_msec(), output, ws_id, false);
+                     pointer.set_grab(self, grab, serial, Focus::Clear);
+                     self.niri
+                         .cursor_manager
+@@ -3069,6 +3069,28 @@ impl State {
              },
          );
          pointer.frame(self);
@@ -57,14 +56,14 @@ index ab31df94..1bbee77a 100644
 +            pointer.frame(self);
 +        }
      }
- 
+
      fn on_pointer_axis<I: InputBackend>(&mut self, event: I::PointerAxisEvent) {
 diff --git a/src/input/spatial_movement_grab.rs b/src/input/spatial_movement_grab.rs
 index 546929a0..40595ac0 100644
 --- a/src/input/spatial_movement_grab.rs
 +++ b/src/input/spatial_movement_grab.rs
 @@ -16,6 +16,7 @@ use crate::utils::get_monotonic_time;
- 
+
  pub struct SpatialMovementGrab {
      start_data: PointerGrabStartData<State>,
 +    start_time: u32,
@@ -89,7 +88,7 @@ index 546929a0..40595ac0 100644
              gesture,
 @@ -186,8 +189,17 @@ impl PointerGrab<State> for SpatialMovementGrab {
          handle.button(data, event);
- 
+
          if handle.current_pressed().is_empty() {
 +            let synthesize = self.gesture == GestureState::Recognizing;
 +            let button = self.start_data.button;
@@ -104,26 +103,26 @@ index 546929a0..40595ac0 100644
 +            }
          }
      }
- 
+
 diff --git a/src/niri.rs b/src/niri.rs
 index 414f702d..00ddd0a9 100644
 --- a/src/niri.rs
 +++ b/src/niri.rs
 @@ -413,6 +413,8 @@ pub struct Niri {
- 
+
      #[cfg(feature = "xdp-gnome-screencast")]
      pub casting: Screencasting,
 +
 +    pub queue_synthesized_click: Option<(u32, u32, u32)>,
  }
- 
+
  #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 @@ -2567,6 +2569,8 @@ impl Niri {
- 
+
              #[cfg(feature = "xdp-gnome-screencast")]
              casting: screencasting,
 +
 +            queue_synthesized_click: None,
          };
- 
+
          niri.reset_pointer_inactivity_timer();

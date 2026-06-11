@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, config, lib, ... }:
 
 {
   # --- Niri & DMS ---
@@ -23,14 +23,54 @@
     enableCalendarEvents = true;
   };
 
-  # --- Display Manager (GDM) ---
-  services.xserver.enable = true;
-  services.displayManager.gdm = {
+  # --- Display Manager (greetd + ReGreet, rendered by niri) ---
+  # NOTE: switched off GDM. GDM 50 (GNOME 50) fails to launch non-GNOME Wayland
+  # sessions ("Unable to run session" / session never registers), which broke
+  # niri login. greetd is a pure Wayland/console login daemon (no Xorg at all).
+  # We render the graphical ReGreet greeter with niri itself (not cage), so the
+  # login screen inherits the real session's multi-monitor/scaling setup and
+  # isn't a TTY UI that late boot messages can corrupt. See nixpkgs#523332.
+  programs.regreet.enable = true;
+  # stylix themes ReGreet but only sets the font family, leaving ReGreet's
+  # default size of 16 (huge on the 4K). Match the rest of the system.
+  programs.regreet.font.size = config.stylix.fonts.sizes.applications;
+
+  # Reboot / power-off buttons on the greeter (for when you're locked out of a
+  # session). ReGreet hides these unless the commands are configured.
+  programs.regreet.settings.commands = {
+    reboot = [ "${lib.getExe' pkgs.systemd "systemctl"}" "reboot" ];
+    poweroff = [ "${lib.getExe' pkgs.systemd "systemctl"}" "poweroff" ];
+  };
+
+  # Greeter niri config: launch ReGreet, and quit niri once it exits (login done).
+  # Outputs mirror the real session (keep in sync with
+  # modules/home-manager/features/niri.nix) so ReGreet renders at the correct
+  # scale/DPI instead of a blurry/tiny 1.0 on the 4K.
+  environment.etc."greetd/niri-greeter.kdl".text = ''
+    spawn-sh-at-startup "${lib.getExe config.programs.regreet.package}; ${lib.getExe' config.programs.niri.package "niri"} msg action quit --skip-confirmation"
+
+    hotkey-overlay {
+        skip-at-startup
+    }
+
+    output "Dell Inc. AW3423DWF BDRK2S3" {
+        mode "3440x1440@164.900"
+        scale 1.0
+        position x=0 y=0
+    }
+
+    output "Samsung Electric Company Odyssey G81SF HNBYA00490" {
+        mode "3840x2160@239.996"
+        scale 1.25
+        position x=3440 y=0
+    }
+  '';
+
+  services.greetd = {
     enable = true;
-    settings = {
-      greeter = {
-        Exclude = "root";
-      };
+    settings.default_session = {
+      command = "${lib.getExe' pkgs.dbus "dbus-run-session"} ${lib.getExe' config.programs.niri.package "niri"} --config /etc/greetd/niri-greeter.kdl";
+      user = "greeter";
     };
   };
 
