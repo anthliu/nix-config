@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
@@ -13,7 +13,7 @@
 
     # AI Tools
     llama-cpp
-    claude-code
+    inputs.claude-code.packages.${pkgs.system}.default
     gemini-cli
     opencode
     lmstudio
