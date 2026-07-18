@@ -48,7 +48,7 @@
   users.users.anthliu = {
     isNormalUser = true;
     description = "Anthony Liu";
-    extraGroups = [ "networkmanager" "wheel" "audio" "video" "i2c" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "video" "i2c" "dialout" ];
     # Don't forget to set password with `passwd`
   };
 

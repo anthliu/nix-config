@@ -97,6 +97,7 @@
     thunar-volman
     xfconf # For GTK settings
     tumbler
+    ffmpegthumbnailer # registers .thumbnailer so the GTK/portal file chooser (browser upload dialog) can make video thumbnails
     feh
     zathura # pdf reader
   ];
