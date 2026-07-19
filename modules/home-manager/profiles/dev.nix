@@ -13,7 +13,7 @@
 
     # AI Tools
     llama-cpp
-    inputs.claude-code.packages.${pkgs.system}.default
+    inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
     gemini-cli
     opencode
     lmstudio

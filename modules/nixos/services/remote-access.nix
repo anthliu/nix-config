@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   # --- SSH Configuration ---
@@ -22,7 +22,4 @@
       workstation = true;
     };
   };
-
-  # Register NSS modules so glibc can find them
-  system.nssModules = [ pkgs.nssmdns ];
 }

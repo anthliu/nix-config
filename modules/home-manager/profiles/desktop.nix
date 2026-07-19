@@ -41,7 +41,11 @@
     antigravity-wrapped
     pkgs.google-chrome
     pkgs.vlc
-    pkgs.discord
+    # vesktop instead of vanilla discord: its venmic/PipeWire screencast works
+    # on NVIDIA (vanilla discord's bundled webrtc fails dmabuf negotiation) and
+    # it can share screen audio. Native Wayland is handled by NIXOS_OZONE_WL in
+    # the niri session env (see modules/home-manager/features/niri.nix).
+    pkgs.vesktop
     pkgs.shotcut
   ];
 

@@ -19,11 +19,19 @@
 
     # Hardware-specific packages
     (writeShellScriptBin "google-chrome-igpu" ''
+      # Render Chrome on the AMD iGPU so it doesn't consume RTX 3090 VRAM (frees
+      # VRAM for local AI on the NVIDIA GPU). --render-node-override pins the GPU;
+      # runs native Wayland so it picks up the dark GTK theme (XWayland apps get no
+      # theme here - no xsettings daemon) and renders correctly. AMD->NVIDIA buffer
+      # display across GPUs works fine, so XWayland is not needed. Reference the
+      # render node by stable PCI by-path: /dev/dri/renderD12X numbers can flip
+      # between boots (this launcher used to hardcode renderD129 = NVIDIA).
       exec env LIBVA_DRIVER_NAME=radeonsi \
         __EGL_VENDOR_LIBRARY_FILENAMES=/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json \
         __GLX_VENDOR_LIBRARY_NAME=mesa \
         google-chrome-stable \
-        --render-node-override=/dev/dri/renderD129 \
+        --ozone-platform=wayland \
+        --render-node-override=/dev/dri/by-path/pci-0000:11:00.0-render \
         --disable-zero-copy \
         --disable-gpu-rasterization \
         --disable-features=Vulkan,VaapiVideoDecodeLinuxGL \

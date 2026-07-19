@@ -1,16 +1,6 @@
-{ pkgs, lib, ... }:
+{ ... }:
 
 {
-  environment.systemPackages = with pkgs; [
-    lact
-  ];
-
-  systemd.services.lactd = {
-    description = "GPU Control Daemon";
-    enable = true;
-    serviceConfig = {
-      ExecStart = "${pkgs.lact}/bin/lact daemon";
-    };
-    wantedBy = ["multi-user.target"];
-  };
+  # GPU control daemon (nixpkgs module provides the package and lactd unit)
+  services.lact.enable = true;
 }

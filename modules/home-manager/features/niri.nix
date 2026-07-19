@@ -3,20 +3,25 @@
 {
   imports = [ inputs.niri.homeModules.niri ];
 
-  # Set idle display commands for swayidle
+  # Set idle display commands for swayidle.
+  # Use the session's actual niri package (patched niri-unstable), not pkgs.niri —
+  # `niri msg` against a mismatched compositor version can fail.
   custom.idle = {
-    displayOffCommand = "${pkgs.niri}/bin/niri msg action power-off-monitors";
-    displayOnCommand = "${pkgs.niri}/bin/niri msg action power-on-monitors";
+    displayOffCommand = "${config.programs.niri.package}/bin/niri msg action power-off-monitors";
+    displayOnCommand = "${config.programs.niri.package}/bin/niri msg action power-on-monitors";
   };
 
   programs.niri = {
     enable = true;
-    package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable.overrideAttrs (old: {
-      patches = (old.patches or []) ++ [
-        ../../../patches/niri-middle-click-drag.patch
-      ];
-    });
+    package = import ../../../packages/niri-patched.nix { inherit pkgs inputs; };
     settings = {
+      # Run Electron/Chromium apps natively on Wayland (matches the mango session)
+      # so screen sharing goes through the PipeWire portal instead of XWayland.
+      environment = {
+        NIXOS_OZONE_WL = "1";
+        ELECTRON_OZONE_PLATFORM_HINT = "auto";
+      };
+
       input = {
         keyboard = {
           xkb = {

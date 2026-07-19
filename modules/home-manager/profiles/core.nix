@@ -13,7 +13,7 @@
     settings = {
       init.defaultBranch = "main";
       user.name = "Anthony Liu";
-      user.email = "anthzliu@gmail.com.com";
+      user.email = "anthzliu@gmail.com";
       # safe.directory = "/home/anthliu/nix-config"; # useful if git complains about ownership
     };
   };
@@ -24,12 +24,14 @@
     # If you find SSH stops working for other servers, comment this line out.
     enableDefaultConfig = false; 
 
-    matchBlocks = {
+    # Attribute names become `Host <name>` blocks; values are literal
+    # ssh_config(5) keywords.
+    settings = {
       "github.com" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = "~/.ssh/id_ed25519"; 
-        identitiesOnly = true;
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = "~/.ssh/id_ed25519";
+        IdentitiesOnly = true;
       };
     };
 

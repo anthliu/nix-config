@@ -4,11 +4,7 @@
   # --- Niri & DMS ---
   programs.niri = {
     enable = true;
-    package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable.overrideAttrs (old: {
-      patches = (old.patches or []) ++ [
-        ../../../patches/niri-middle-click-drag.patch
-      ];
-    });
+    package = import ../../../packages/niri-patched.nix { inherit pkgs inputs; };
   };
   programs.dms-shell = {
     enable = true;
@@ -137,6 +133,12 @@
       pkgs.xdg-desktop-portal-gtk
       pkgs.xdg-desktop-portal-gnome
     ];
-    config.common.default = "gtk";
+    # gtk is the default backend, but it doesn't implement ScreenCast/Screenshot,
+    # so route those to the gnome backend (needed for Discord/OBS screen sharing).
+    config.common = {
+      default = "gtk";
+      "org.freedesktop.impl.portal.ScreenCast" = "gnome";
+      "org.freedesktop.impl.portal.Screenshot" = "gnome";
+    };
   };
 }
