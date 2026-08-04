@@ -45,6 +45,14 @@
   environment.etc."greetd/niri-greeter.kdl".text = ''
     spawn-sh-at-startup "${lib.getExe config.programs.regreet.package}; ${lib.getExe' config.programs.niri.package "niri"} msg action quit --skip-confirmation"
 
+    // Idle management for the greeter: without this, a machine left sitting on
+    // the login screen (e.g. after a reboot) never sleeps and wastes power.
+    // Mirrors the real session (modules/home-manager/features/swayidle.nix):
+    // blank the displays at 5 min, suspend at 15 min. The before-sleep /
+    // after-resume power-on-monitors work around the nvidia-resume race that
+    // otherwise corrupts niri's DRM state on wake (see niri-wm/niri#2139).
+    spawn-sh-at-startup "${lib.getExe pkgs.swayidle} -w timeout 300 '${lib.getExe' config.programs.niri.package "niri"} msg action power-off-monitors' resume '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors' timeout 900 '${lib.getExe' pkgs.systemd "systemctl"} suspend' before-sleep '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors' after-resume '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors'"
+
     hotkey-overlay {
         skip-at-startup
     }
@@ -69,6 +77,18 @@
       user = "greeter";
     };
   };
+
+  # Allow the greeter's swayidle to suspend on idle. greetd's greeter session
+  # isn't reliably seen as "active" by logind, so the active-session default
+  # for org.freedesktop.login1.suspend may not apply — grant it explicitly.
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (action.id == "org.freedesktop.login1.suspend" &&
+          subject.user == "greeter") {
+        return polkit.Result.YES;
+      }
+    });
+  '';
 
   # --- Notification Daemon (Mako) ---
   # Niri doesn't come with a notification daemon, Mako is recommended
