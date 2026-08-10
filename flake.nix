@@ -78,16 +78,14 @@
         ];
       };
 
-      "anthliu@nixos-wsl" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-        };
-        extraSpecialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/nixos-wsl/home.nix
-        ];
-      };
+      # nixos-wsl has no entry here on purpose. Its user environment is built by
+      # the home-manager NixOS module in hosts/nixos-wsl/default.nix, which
+      # installs into /etc/profiles/per-user and activates from a system unit. A
+      # homeConfigurations entry would be a second, independent generation of
+      # the same home.nix, installing into ~/.nix-profile and claiming the same
+      # dotfiles; whichever of `home-manager switch` and `nixos-rebuild switch`
+      # ran last would own them, silently displacing the other's files. Build
+      # that host with `nixos-rebuild switch --flake .#nixos-wsl`.
     };
   };
 }
