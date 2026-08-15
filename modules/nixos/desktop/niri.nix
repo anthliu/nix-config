@@ -19,72 +19,74 @@
     enableCalendarEvents = true;
   };
 
-  # --- Display Manager (greetd + ReGreet, rendered by niri) ---
+  # --- Display Manager (greetd + dms-greeter, rendered by niri) ---
   # NOTE: switched off GDM. GDM 50 (GNOME 50) fails to launch non-GNOME Wayland
   # sessions ("Unable to run session" / session never registers), which broke
   # niri login. greetd is a pure Wayland/console login daemon (no Xorg at all).
-  # We render the graphical ReGreet greeter with niri itself (not cage), so the
-  # login screen inherits the real session's multi-monitor/scaling setup and
-  # isn't a TTY UI that late boot messages can corrupt. See nixpkgs#523332.
-  programs.regreet.enable = true;
-  # stylix themes ReGreet but only sets the font family, leaving ReGreet's
-  # default size of 16 (huge on the 4K). Match the rest of the system.
-  programs.regreet.font.size = config.stylix.fonts.sizes.applications;
-
-  # Reboot / power-off buttons on the greeter (for when you're locked out of a
-  # session). ReGreet hides these unless the commands are configured.
-  programs.regreet.settings.commands = {
-    reboot = [ "${lib.getExe' pkgs.systemd "systemctl"}" "reboot" ];
-    poweroff = [ "${lib.getExe' pkgs.systemd "systemctl"}" "poweroff" ];
-  };
-
-  # Greeter niri config: launch ReGreet, and quit niri once it exits (login done).
-  # Outputs mirror the real session (keep in sync with
-  # modules/home-manager/features/niri.nix) so ReGreet renders at the correct
-  # scale/DPI instead of a blurry/tiny 1.0 on the 4K.
-  environment.etc."greetd/niri-greeter.kdl".text = ''
-    spawn-sh-at-startup "${lib.getExe config.programs.regreet.package}; ${lib.getExe' config.programs.niri.package "niri"} msg action quit --skip-confirmation"
-
-    // Idle management for the greeter: without this, a machine left sitting on
-    // the login screen (e.g. after a reboot) never sleeps and wastes power.
-    // Mirrors the real session (modules/home-manager/features/swayidle.nix):
-    // blank the displays at 5 min, suspend at 15 min. The before-sleep /
-    // after-resume power-on-monitors work around the nvidia-resume race that
-    // otherwise corrupts niri's DRM state on wake (see niri-wm/niri#2139).
-    spawn-sh-at-startup "${lib.getExe pkgs.swayidle} -w timeout 300 '${lib.getExe' config.programs.niri.package "niri"} msg action power-off-monitors' resume '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors' timeout 900 '${lib.getExe' pkgs.systemd "systemctl"} suspend' before-sleep '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors' after-resume '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors'"
-
-    hotkey-overlay {
-        skip-at-startup
-    }
-
-    output "Dell Inc. AW3423DWF BDRK2S3" {
-        mode "3440x1440@164.900"
-        scale 1.0
-        position x=0 y=0
-    }
-
-    output "Samsung Electric Company Odyssey G81SF HNBYA00490" {
-        mode "3840x2160@239.996"
-        scale 1.25
-        position x=3440 y=0
-    }
-  '';
-
-  services.greetd = {
+  # The greeter is rendered by niri itself (not cage), so the login screen
+  # inherits the real session's multi-monitor/scaling setup and isn't a TTY UI
+  # that late boot messages can corrupt. See nixpkgs#523332.
+  #
+  # dms-greeter reuses the DMS lock screen look and picks up our own theme.
+  services.displayManager.dms-greeter = {
     enable = true;
-    settings.default_session = {
-      command = "${lib.getExe' pkgs.dbus "dbus-run-session"} ${lib.getExe' config.programs.niri.package "niri"} --config /etc/greetd/niri-greeter.kdl";
-      user = "greeter";
-    };
+    compositor.name = "niri";
+
+    # Syncs our DMS settings/session/colors into the greeter's data dir.
+    configHome = "/home/anthliu";
+
+    # Replaces the launcher's base config, which it skips when given one.
+    # Outputs mirror modules/home-manager/features/niri.nix (keep in sync).
+    compositor.customConfig = ''
+      hotkey-overlay {
+          skip-at-startup
+      }
+
+      environment {
+          DMS_RUN_GREETER "1"
+      }
+
+      gestures {
+          hot-corners {
+              off
+          }
+      }
+
+      layout {
+          background-color "#000000"
+      }
+
+      // Idle management for the greeter: without this, a machine left sitting on
+      // the login screen (e.g. after a reboot) never sleeps and wastes power.
+      // Mirrors the real session (modules/home-manager/features/swayidle.nix):
+      // blank the displays at 5 min, suspend at 15 min. The before-sleep /
+      // after-resume power-on-monitors work around the nvidia-resume race that
+      // otherwise corrupts niri's DRM state on wake (see niri-wm/niri#2139).
+      // Store paths are required: the launcher's PATH has only qs and niri.
+      spawn-sh-at-startup "${lib.getExe pkgs.swayidle} -w timeout 300 '${lib.getExe' config.programs.niri.package "niri"} msg action power-off-monitors' resume '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors' timeout 900 '${lib.getExe' pkgs.systemd "systemctl"} suspend' before-sleep '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors' after-resume '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors'"
+
+      output "Dell Inc. AW3423DWF BDRK2S3" {
+          mode "3440x1440@164.900"
+          scale 1.0
+          position x=0 y=0
+      }
+
+      output "Samsung Electric Company Odyssey G81SF HNBYA00490" {
+          mode "3840x2160@239.996"
+          scale 1.25
+          position x=3440 y=0
+      }
+    '';
   };
 
   # Allow the greeter's swayidle to suspend on idle. greetd's greeter session
   # isn't reliably seen as "active" by logind, so the active-session default
   # for org.freedesktop.login1.suspend may not apply — grant it explicitly.
+  # The module runs the greeter as its own "dms-greeter" user, not "greeter".
   security.polkit.extraConfig = ''
     polkit.addRule(function(action, subject) {
       if (action.id == "org.freedesktop.login1.suspend" &&
-          subject.user == "greeter") {
+          subject.user == "dms-greeter") {
         return polkit.Result.YES;
       }
     });
@@ -96,6 +98,8 @@
     xwayland-satellite
     playerctl
     mako
+
+    jq # dms-greeter reads the cursor theme with it, off the pam_env PATH
     libnotify # For notify-send
     
     # Portals (Recommended for Niri)
