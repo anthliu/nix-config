@@ -64,19 +64,13 @@
         ];
       };
 
-      # europa (mini PC) is scaffolded in hosts/europa but not yet built. Its
-      # hardware-configuration.nix is generated during the install, and every
-      # output here is evaluated by `nix flake show` and `nix flake check`, so
-      # an entry pointing at the missing file fails those for all hosts.
-      # Uncomment once hosts/europa/hardware-configuration.nix is committed.
-      #
-      # europa = nixpkgs.lib.nixosSystem {
-      #   system = "x86_64-linux";
-      #   specialArgs = { inherit inputs; };
-      #   modules = [
-      #     ./hosts/europa/default.nix
-      #   ];
-      # };
+      europa = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/europa/default.nix
+        ];
+      };
     };
 
     homeConfigurations = {

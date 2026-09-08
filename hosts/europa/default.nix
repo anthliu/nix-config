@@ -18,7 +18,7 @@
     inputs.home-manager.nixosModules.default
 
     inputs.nixos-hardware.nixosModules.common-pc-ssd
-    # Add the matching common-cpu-* module once the CPU vendor is known.
+    inputs.nixos-hardware.nixosModules.common-cpu-intel
   ];
 
   # --- Machine Specifics ---
