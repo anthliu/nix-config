@@ -46,46 +46,46 @@
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: {
     nixosConfigurations = {
-      desktop = nixpkgs.lib.nixosSystem {
+      ganymede = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        
+
         specialArgs = { inherit inputs; };
-        
+
         modules = [
-          ./hosts/desktop/default.nix
+          ./hosts/ganymede/default.nix
         ];
       };
 
-      nixos-wsl = nixpkgs.lib.nixosSystem {
+      callisto = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
-          ./hosts/nixos-wsl/default.nix
+          ./hosts/callisto/default.nix
         ];
       };
     };
 
     homeConfigurations = {
-      "anthliu@desktop" = home-manager.lib.homeManagerConfiguration {
+      "anthliu@ganymede" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = "x86_64-linux";
           config.allowUnfree = true;
         };
         extraSpecialArgs = { inherit inputs; };
         modules = [ 
-          ./hosts/desktop/home.nix
+          ./hosts/ganymede/home.nix
           inputs.stylix.homeModules.stylix
         ];
       };
 
-      # nixos-wsl has no entry here on purpose. Its user environment is built by
-      # the home-manager NixOS module in hosts/nixos-wsl/default.nix, which
+      # callisto has no entry here on purpose. Its user environment is built by
+      # the home-manager NixOS module in hosts/callisto/default.nix, which
       # installs into /etc/profiles/per-user and activates from a system unit. A
       # homeConfigurations entry would be a second, independent generation of
       # the same home.nix, installing into ~/.nix-profile and claiming the same
       # dotfiles; whichever of `home-manager switch` and `nixos-rebuild switch`
       # ran last would own them, silently displacing the other's files. Build
-      # that host with `nixos-rebuild switch --flake .#nixos-wsl`.
+      # that host with `nixos-rebuild switch --flake .#callisto`.
     };
   };
 }

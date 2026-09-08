@@ -18,7 +18,7 @@
     extraGroups = [ "wheel" ];
   };
 
-  networking.hostName = "nixos-wsl";
+  networking.hostName = "callisto";
 
   # Publish the GPU libraries Windows injects at /usr/lib/wsl/lib -
   # libcuda.so.1, libnvidia-ml.so.1 and the d3d12 stack - under

@@ -27,7 +27,7 @@
   ];
 
   # --- Machine Specifics ---
-  networking.hostName = "desktop";
+  networking.hostName = "ganymede";
   networking.networkmanager.enable = true;
 
   # Bootloader (Specific to this dual-boot setup)
