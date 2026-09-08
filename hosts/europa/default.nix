@@ -10,6 +10,7 @@
     ../../modules/nixos/desktop/niri.nix
     inputs.dms.nixosModules.default
     ../../modules/nixos/services/nix-ld.nix
+    ../../modules/nixos/services/steam.nix
     ../../modules/nixos/services/stylix.nix
     ../../modules/nixos/services/remote-access.nix
     ../../modules/nixos/hardware/swap.nix

@@ -30,6 +30,8 @@ in
     inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
     gemini-cli
     opencode
+    codex
+    pi-coding-agent
   ])
   # lmstudio is an Electron front-end shipped inside an FHS sandbox, so its
   # 3.7 GiB closure is the browser runtime and a private glibc tree rather than

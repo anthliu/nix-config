@@ -38,7 +38,10 @@
         };
       };
 
+      # Outputs for every host share this module. niri ignores entries for
+      # monitors that aren't connected, so each host only picks up its own.
       outputs = {
+        # --- ganymede ---
         "Dell Inc. AW3423DWF BDRK2S3" = {
           mode = {
             width = 3440;
@@ -63,6 +66,24 @@
           # transform = "normal";
           position = {
             x = 3440;
+            y = 0;
+          };
+        };
+
+        # --- europa ---
+        # 27" 1440p on HDMI-A-1. This is the panel's maximum: it advertises no
+        # higher mode, and reports no VRR support, so there is nothing further
+        # to enable here. Pinned rather than left to niri's preferred-mode
+        # fallback so a renegotiation can't silently pick something else.
+        "Dell Inc. DELL P2723DE 8VCSX34" = {
+          mode = {
+            width = 2560;
+            height = 1440;
+            refresh = 59.951;
+          };
+          scale = 1.0;
+          position = {
+            x = 0;
             y = 0;
           };
         };

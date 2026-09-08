@@ -98,6 +98,13 @@ in
 
     services.swayidle = {
       enable = true;
+
+      # "-w" is the module default and must be kept: it makes swayidle wait for
+      # each command to finish before continuing, which the resume/power-on
+      # ordering depends on. "-d" adds debug logging of every timeout and resume
+      # to the journal, so an idle failure (display blanks and never comes back)
+      # can be diagnosed from logs instead of reproduced by hand.
+      extraArgs = [ "-w" "-d" ];
       # WORKAROUND(nvidia-resume race): nvidia-resume.service takes ~2s after wake
       # to restore the GPU. Logind unfreezes niri before it finishes, causing
       # "Page flip commit failed (Permission denied)" which can corrupt niri's
