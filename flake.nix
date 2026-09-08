@@ -56,13 +56,27 @@
         ];
       };
 
-      callisto = nixpkgs.lib.nixosSystem {
+      thebe = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
-          ./hosts/callisto/default.nix
+          ./hosts/thebe/default.nix
         ];
       };
+
+      # europa (mini PC) is scaffolded in hosts/europa but not yet built. Its
+      # hardware-configuration.nix is generated during the install, and every
+      # output here is evaluated by `nix flake show` and `nix flake check`, so
+      # an entry pointing at the missing file fails those for all hosts.
+      # Uncomment once hosts/europa/hardware-configuration.nix is committed.
+      #
+      # europa = nixpkgs.lib.nixosSystem {
+      #   system = "x86_64-linux";
+      #   specialArgs = { inherit inputs; };
+      #   modules = [
+      #     ./hosts/europa/default.nix
+      #   ];
+      # };
     };
 
     homeConfigurations = {
@@ -78,14 +92,14 @@
         ];
       };
 
-      # callisto has no entry here on purpose. Its user environment is built by
-      # the home-manager NixOS module in hosts/callisto/default.nix, which
+      # thebe has no entry here on purpose. Its user environment is built by
+      # the home-manager NixOS module in hosts/thebe/default.nix, which
       # installs into /etc/profiles/per-user and activates from a system unit. A
       # homeConfigurations entry would be a second, independent generation of
       # the same home.nix, installing into ~/.nix-profile and claiming the same
       # dotfiles; whichever of `home-manager switch` and `nixos-rebuild switch`
       # ran last would own them, silently displacing the other's files. Build
-      # that host with `nixos-rebuild switch --flake .#callisto`.
+      # that host with `nixos-rebuild switch --flake .#thebe`.
     };
   };
 }
