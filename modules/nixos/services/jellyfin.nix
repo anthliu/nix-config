@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   services.jellyfin = {
@@ -7,7 +7,11 @@
   };
 
   users.users.jellyfin = {
-    extraGroups = [ "users" "render" "video" ];
+    extraGroups = [
+      "users"
+      "render"
+      "video"
+    ];
   };
 
   environment.systemPackages = [

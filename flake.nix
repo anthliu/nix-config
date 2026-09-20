@@ -8,7 +8,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     dms = {
@@ -44,56 +44,25 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
-    nixosConfigurations = {
-      ganymede = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-
-        specialArgs = { inherit inputs; };
-
-        modules = [
-          ./hosts/ganymede/default.nix
-        ];
-      };
-
-      thebe = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/thebe/default.nix
-        ];
-      };
-
-      europa = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/europa/default.nix
-        ];
-      };
-    };
-
-    homeConfigurations = {
-      "anthliu@ganymede" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
+  outputs =
+    { nixpkgs, ... }@inputs:
+    let
+      system = "x86_64-linux";
+      mkHost =
+        module:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [ module ];
         };
-        extraSpecialArgs = { inherit inputs; };
-        modules = [ 
-          ./hosts/ganymede/home.nix
-          inputs.stylix.homeModules.stylix
-        ];
+    in
+    {
+      nixosConfigurations = {
+        ganymede = mkHost ./hosts/ganymede/default.nix;
+        europa = mkHost ./hosts/europa/default.nix;
+        thebe = mkHost ./hosts/thebe/default.nix;
       };
 
-      # thebe has no entry here on purpose. Its user environment is built by
-      # the home-manager NixOS module in hosts/thebe/default.nix, which
-      # installs into /etc/profiles/per-user and activates from a system unit. A
-      # homeConfigurations entry would be a second, independent generation of
-      # the same home.nix, installing into ~/.nix-profile and claiming the same
-      # dotfiles; whichever of `home-manager switch` and `nixos-rebuild switch`
-      # ran last would own them, silently displacing the other's files. Build
-      # that host with `nixos-rebuild switch --flake .#thebe`.
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
     };
-  };
 }

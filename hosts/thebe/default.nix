@@ -1,22 +1,18 @@
-{ pkgs, inputs, ... }:
+{ inputs, ... }:
 
 {
   imports = [
     inputs.nixos-wsl.nixosModules.default
     ../../modules/nixos/base.nix
+    ../../modules/nixos/users/anthliu.nix
     ../../modules/nixos/services/nix-ld.nix
-    inputs.home-manager.nixosModules.default
+    ../../modules/nixos/services/nix-ld/cuda-wsl.nix
   ];
 
   wsl.enable = true;
   wsl.defaultUser = "anthliu";
 
-  # Define the user explicitly for consistent permissions/groups
-  users.users.anthliu = {
-    isNormalUser = true;
-    description = "Anthony Liu";
-    extraGroups = [ "wheel" ];
-  };
+  users.users.anthliu.extraGroups = [ "wheel" ];
 
   networking.hostName = "thebe";
 
@@ -29,16 +25,7 @@
   # working but nothing can find a usable libcuda.
   wsl.useWindowsDriver = true;
 
-  # Home Manager Configuration
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      "anthliu" = import ./home.nix;
-    };
-    backupFileExtension = "backup";
-  };
+  home-manager.users.anthliu = import ./home.nix;
 
   # Disable systemd-oomd to fix "Device or resource busy" errors in WSL
   # which prevent the user session from starting.

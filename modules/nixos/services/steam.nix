@@ -1,22 +1,23 @@
-{ pkgs, lib, ... }: 
+{ pkgs, ... }:
 
 {
   programs.steam = {
     enable = true;
     gamescopeSession.enable = true;
     package = pkgs.steam.override {
-      extraPkgs = pkgs': with pkgs'; [
-        libxcursor
-        libxi
-        libxinerama
-        libxscrnsaver
-        libpng
-        libpulseaudio
-        libvorbis
-        stdenv.cc.cc.lib
-        libkrb5
-        keyutils
-      ];
+      extraPkgs =
+        pkgs': with pkgs'; [
+          libxcursor
+          libxi
+          libxinerama
+          libxscrnsaver
+          libpng
+          libpulseaudio
+          libvorbis
+          stdenv.cc.cc.lib
+          libkrb5
+          keyutils
+        ];
     };
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
@@ -27,7 +28,7 @@
     enable = true;
     capSysNice = false;
   };
-  
+
   # Gamemode - optimises system performance for games
   programs.gamemode.enable = true;
 

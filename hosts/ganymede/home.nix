@@ -1,23 +1,18 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
     ../../modules/home-manager/profiles/core.nix
     ../../modules/home-manager/profiles/dev.nix
-    ../../modules/home-manager/profiles/desktop.nix
-    ../../modules/nixos/services/stylix.nix
+    ../../modules/home-manager/profiles/graphical.nix
+    ../../modules/home-manager/features/local-ai.nix
+    ../../modules/home-manager/features/niri.nix
+    ../../modules/home-manager/features/qmk.nix
+    ../../modules/home-manager/features/swayidle.nix
+    ../../modules/shared/stylix.nix
   ];
 
-  # Home Manager needs to know who you are
-  home.username = "anthliu";
-  home.homeDirectory = "/home/anthliu";
-
-  # Install user-specific packages here
   home.packages = with pkgs; [
-    # Explicitly install Home Manager CLI
-    inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.home-manager
-
-    # Hardware-specific packages
     (writeShellScriptBin "google-chrome-igpu" ''
       # Render Chrome on the AMD iGPU so it doesn't consume RTX 3090 VRAM (frees
       # VRAM for local AI on the NVIDIA GPU). --render-node-override pins the GPU;
@@ -40,6 +35,34 @@
     '')
   ];
 
+  programs.niri.settings.outputs = {
+    "Dell Inc. AW3423DWF BDRK2S3" = {
+      mode = {
+        width = 3440;
+        height = 1440;
+        refresh = 164.900;
+      };
+      scale = 1.0;
+      position = {
+        x = 0;
+        y = 0;
+      };
+    };
+
+    "Samsung Electric Company Odyssey G81SF HNBYA00490" = {
+      mode = {
+        width = 3840;
+        height = 2160;
+        refresh = 239.996;
+      };
+      scale = 1.25;
+      position = {
+        x = 3440;
+        y = 0;
+      };
+    };
+  };
+
   xdg.desktopEntries = {
     google-chrome-igpu = {
       name = "Google Chrome (iGPU)";
@@ -47,7 +70,10 @@
       exec = "google-chrome-igpu %U";
       icon = "google-chrome";
       terminal = false;
-      categories = [ "Network" "WebBrowser" ];
+      categories = [
+        "Network"
+        "WebBrowser"
+      ];
       mimeType = [
         "text/html"
         "text/xml"
@@ -66,9 +92,5 @@
     };
   };
 
-  # Let Home Manager install and manage itself
-  programs.home-manager.enable = true;
-
-  # State version for Home Manager (similar to NixOS system.stateVersion)
-  home.stateVersion = "25.11"; 
-} 
+  home.stateVersion = "25.11";
+}

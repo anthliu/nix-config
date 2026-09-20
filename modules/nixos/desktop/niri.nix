@@ -1,24 +1,22 @@
-{ pkgs, inputs, config, lib, ... }:
+{
+  pkgs,
+  inputs,
+  config,
+  lib,
+  ...
+}:
 
 {
+  imports = [
+    ./dms.nix
+    ./wayland-common.nix
+  ];
+
   # --- Niri & DMS ---
   programs.niri = {
     enable = true;
     package = import ../../../packages/niri-patched.nix { inherit pkgs inputs; };
   };
-  programs.dms-shell = {
-    enable = true;
-    systemd = {
-      enable = true;
-      restartIfChanged = true;
-    };
-    enableSystemMonitoring = true;
-    enableVPN = true;
-    enableDynamicTheming = true;
-    enableAudioWavelength = true; 
-    enableCalendarEvents = true;
-  };
-
   # --- Display Manager (greetd + dms-greeter, rendered by niri) ---
   # NOTE: switched off GDM. GDM 50 (GNOME 50) fails to launch non-GNOME Wayland
   # sessions ("Unable to run session" / session never registers), which broke
@@ -32,11 +30,8 @@
     enable = true;
     compositor.name = "niri";
 
-    # Syncs our DMS settings/session/colors into the greeter's data dir.
-    configHome = "/home/anthliu";
-
     # Replaces the launcher's base config, which it skips when given one.
-    # Outputs mirror modules/home-manager/features/niri.nix (keep in sync).
+    # Output topology is appended by each host that imports this module.
     compositor.customConfig = ''
       hotkey-overlay {
           skip-at-startup
@@ -64,18 +59,6 @@
       // otherwise corrupts niri's DRM state on wake (see niri-wm/niri#2139).
       // Store paths are required: the launcher's PATH has only qs and niri.
       spawn-sh-at-startup "${lib.getExe pkgs.swayidle} -w timeout 300 '${lib.getExe' config.programs.niri.package "niri"} msg action power-off-monitors' resume '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors' timeout 900 '${lib.getExe' pkgs.systemd "systemctl"} suspend' before-sleep '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors' after-resume '${lib.getExe' config.programs.niri.package "niri"} msg action power-on-monitors'"
-
-      output "Dell Inc. AW3423DWF BDRK2S3" {
-          mode "3440x1440@164.900"
-          scale 1.0
-          position x=0 y=0
-      }
-
-      output "Samsung Electric Company Odyssey G81SF HNBYA00490" {
-          mode "3840x2160@239.996"
-          scale 1.25
-          position x=3440 y=0
-      }
     '';
   };
 
@@ -92,62 +75,12 @@
     });
   '';
 
-  # --- Notification Daemon (Mako) ---
-  # Niri doesn't come with a notification daemon, Mako is recommended
   environment.systemPackages = with pkgs; [
     xwayland-satellite
-    playerctl
-    mako
-
     jq # dms-greeter reads the cursor theme with it, off the pam_env PATH
-    libnotify # For notify-send
-    
-    # Portals (Recommended for Niri)
     xdg-desktop-portal-gtk
     xdg-desktop-portal-gnome
-    gnome-keyring
-    
-    # Auth Agent
-    kdePackages.polkit-kde-agent-1 # plasma-polkit-agent
-    
-    # Default apps
-    fuzzel
-    thunar
-    thunar-archive-plugin
-    thunar-volman
-    xfconf # For GTK settings
-    tumbler
-    ffmpegthumbnailer # registers .thumbnailer so the GTK/portal file chooser (browser upload dialog) can make video thumbnails
-    feh
-    zathura # pdf reader
   ];
-
-  # --- Services ---
-  # Pipewire is already enabled in base/audio config usually, but good to ensure
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  # Files
-  # Enable GVFS (needed for Trash, mounting, and identifying devices)
-  services.gvfs.enable = true;
-
-  # Enable UDisks2 (needed for volume management)
-  services.udisks2.enable = true;
-
-  # Bluetooth
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
- 
-  # Keyring
-  services.gnome.gnome-keyring.enable = true;
-
-  # Required for GTK settings/themes
-  programs.dconf.enable = true;
 
   # --- Portals Configuration ---
   # Niri module usually handles xdg.portal.enable = true, but we ensure extra portals are present

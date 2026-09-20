@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ inputs, lib, ... }:
 
 {
   imports = [
@@ -7,17 +7,14 @@
     ./hardware-configuration.nix
 
     ../../modules/nixos/base.nix
+    ../../modules/nixos/users/anthliu.nix
     ../../modules/nixos/desktop/niri.nix
-    inputs.dms.nixosModules.default
+    ../../modules/nixos/desktop/stylix.nix
     ../../modules/nixos/services/nix-ld.nix
     ../../modules/nixos/services/steam.nix
-    ../../modules/nixos/services/stylix.nix
     ../../modules/nixos/services/remote-access.nix
     ../../modules/nixos/hardware/swap.nix
-    inputs.stylix.nixosModules.stylix
-
-    inputs.home-manager.nixosModules.default
-
+    ./swap.nix
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     inputs.nixos-hardware.nixosModules.common-cpu-intel
   ];
@@ -26,32 +23,31 @@
   networking.hostName = "europa";
   networking.networkmanager.enable = true;
 
+  services.displayManager.dms-greeter = {
+    configHome = "/home/anthliu";
+    compositor.customConfig = lib.mkAfter ''
+      output "Dell Inc. DELL P2723DE 8VCSX34" {
+          mode "2560x1440@59.951"
+          scale 1.0
+          position x=0 y=0
+      }
+    '';
+  };
+
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # --- User Config ---
-  users.users.anthliu = {
-    isNormalUser = true;
-    description = "Anthony Liu";
-    extraGroups = [ "networkmanager" "wheel" "audio" "video" ];
-    # Don't forget to set password with `passwd`
-  };
-
-  # --- Home Manager Configuration ---
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      "anthliu" = import ./home.nix;
-    };
-    backupFileExtension = "backup";
-  };
+  users.users.anthliu.extraGroups = [
+    "networkmanager"
+    "wheel"
+    "audio"
+    "video"
+  ];
+  home-manager.users.anthliu = import ./home.nix;
 
   # --- State Version ---
-  # Tracks the release this host's on-disk state was first created under, and
-  # never changes afterwards. It follows the nixpkgs this flake is pinned to
-  # (26.11), not the older release the installer ISO happens to carry.
+  # Compatibility baseline selected when this host was first configured.
+  # Do not change it during normal nixpkgs upgrades.
   system.stateVersion = "26.11";
 }

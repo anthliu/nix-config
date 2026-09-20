@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   imports = [ inputs.mango.hmModules.mango ];
@@ -79,7 +79,7 @@
       scroller_proportion_preset=0.6,0.5,0.4
       bind=SUPER,f,set_proportion,1.0
       bind=SUPER,r,switch_proportion_preset,
-      
+
       new_is_master=1
       smartgaps=0
       default_mfact=0.6

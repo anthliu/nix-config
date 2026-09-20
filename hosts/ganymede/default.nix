@@ -1,25 +1,24 @@
-{ pkgs, inputs, ... }:
+{ inputs, lib, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
     ../../modules/nixos/base.nix
+    ../../modules/nixos/users/anthliu.nix
     ../../modules/nixos/desktop/niri.nix
-    inputs.dms.nixosModules.default
+    ../../modules/nixos/desktop/nvidia-apps.nix
+    ../../modules/nixos/desktop/stylix.nix
+    ../../modules/nixos/hardware/gputemps.nix
     ../../modules/nixos/hardware/nvidia.nix
+    ../../modules/nixos/hardware/nvidia-rtx3090.nix
     ../../modules/nixos/services/steam.nix
     ../../modules/nixos/services/nix-ld.nix
-    ../../modules/nixos/services/stylix.nix
+    ../../modules/nixos/services/nix-ld/cuda-native.nix
     ../../modules/nixos/hardware/openrgb.nix
     ../../modules/nixos/hardware/lact.nix
     ../../modules/nixos/hardware/swap.nix
-    ../../modules/nixos/hardware/drives.nix
+    ./storage.nix
     ../../modules/nixos/services/remote-access.nix
-    inputs.stylix.nixosModules.stylix
-
-
-    inputs.home-manager.nixosModules.default
-    
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     inputs.nixos-hardware.nixosModules.gigabyte-b650
@@ -29,6 +28,23 @@
   # --- Machine Specifics ---
   networking.hostName = "ganymede";
   networking.networkmanager.enable = true;
+
+  services.displayManager.dms-greeter = {
+    configHome = "/home/anthliu";
+    compositor.customConfig = lib.mkAfter ''
+      output "Dell Inc. AW3423DWF BDRK2S3" {
+          mode "3440x1440@164.900"
+          scale 1.0
+          position x=0 y=0
+      }
+
+      output "Samsung Electric Company Odyssey G81SF HNBYA00490" {
+          mode "3840x2160@239.996"
+          scale 1.25
+          position x=3440 y=0
+      }
+    '';
+  };
 
   # Bootloader (Specific to this dual-boot setup)
   boot.loader.systemd-boot.enable = true;
@@ -43,31 +59,15 @@
     '';
   };
 
-  # --- User Config ---
-  # Users are often specific to the machine (e.g., servers vs laptops)
-  users.users.anthliu = {
-    isNormalUser = true;
-    description = "Anthony Liu";
-    extraGroups = [ "networkmanager" "wheel" "audio" "video" "i2c" "dialout" ];
-    # Don't forget to set password with `passwd`
-  };
-
-  # --- Home Manager Configuration ---
-  home-manager = {
-    # 1. Force Home Manager to use the System's config (including allowUnfree)
-    useGlobalPkgs = true;
-    
-    # 2. Install packages to /etc/profiles instead of ~/.nix-profile
-    # (Recommended for better integration, but optional)
-    useUserPackages = true;
-
-    # Also pass inputs to home-manager modules
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      "anthliu" = import ./home.nix;
-    };
-    backupFileExtension = "backup";
-  };
+  users.users.anthliu.extraGroups = [
+    "networkmanager"
+    "wheel"
+    "audio"
+    "video"
+    "i2c"
+    "dialout"
+  ];
+  home-manager.users.anthliu = import ./home.nix;
 
   # --- State Version ---
   system.stateVersion = "25.11";

@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 let
   no-rgb = pkgs.writeScriptBin "no-rgb" ''
@@ -28,7 +28,10 @@ in
 
   # Required for OpenRGB to access devices
   services.udev.packages = [ pkgs.openrgb ];
-  boot.kernelModules = [ "i2c-dev" "i2c-piix4" ];
+  boot.kernelModules = [
+    "i2c-dev"
+    "i2c-piix4"
+  ];
   boot.kernelParams = [ "acpi_enforce_resources=lax" ];
   hardware.i2c.enable = true;
 

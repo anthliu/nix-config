@@ -1,18 +1,24 @@
-{ pkgs, lib, options, ... }:
+{
+  lib,
+  options,
+  pkgs,
+  ...
+}:
 
 {
   config = lib.mkMerge [
     {
       stylix = {
         enable = true;
-        image = ../../../assets/wallpaper.png;
+        image = ../../assets/wallpaper.png;
         base16Scheme = "${pkgs.base16-schemes}/share/themes/horizon-dark.yaml";
-        
-        # GDM Specific
-        cursor.package = pkgs.adwaita-icon-theme;
-        cursor.name = "Adwaita";
-        cursor.size = 24;
-        
+
+        cursor = {
+          package = pkgs.adwaita-icon-theme;
+          name = "Adwaita";
+          size = 24;
+        };
+
         fonts = {
           monospace = {
             package = pkgs.nerd-fonts.fira-code;
@@ -26,7 +32,6 @@
             package = pkgs.inter;
             name = "Inter";
           };
-
           sizes = {
             terminal = 11;
             applications = 11;
@@ -34,7 +39,6 @@
           };
         };
 
-        # This will apply the background to GDM
         targets.gnome.enable = true;
         targets.gtk.enable = true;
       };

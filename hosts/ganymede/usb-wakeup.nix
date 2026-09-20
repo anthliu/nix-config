@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   # Disable wakeup for all USB devices to prevent random wakeups

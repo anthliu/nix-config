@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   # --- X11 & GNOME ---
@@ -17,5 +17,5 @@
   };
 
   # Gnome needs dconf for saving settings
-  programs.dconf.enable = true; 
+  programs.dconf.enable = true;
 }

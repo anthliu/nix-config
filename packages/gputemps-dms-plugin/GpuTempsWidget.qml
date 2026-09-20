@@ -37,7 +37,8 @@ PluginComponent {
         return temp + "°";
     }
 
-    // Run gputemps periodically
+    // Read the snapshot published by the privileged system service. The shell
+    // never executes a setuid binary directly.
     Timer {
         interval: root.pollInterval
         running: true
@@ -48,7 +49,7 @@ PluginComponent {
 
     Process {
         id: gpuTempsProcess
-        command: ["gputemps", "--json", "--once"]
+        command: ["cat", "/run/gputemps/temps.json"]
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
