@@ -8,7 +8,6 @@
     (python313.withPackages (ps: [ ps.tkinter ]))
 
     inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
-    gemini-cli
     opencode
     codex
     pi-coding-agent

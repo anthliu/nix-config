@@ -18,8 +18,12 @@
 
     niri = {
       url = "github:sodiboo/niri-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # niri-flake currently requires libdisplay-info 0.2, which was removed
+      # from newer nixpkgs. Keep its package build on the last tested revision
+      # while allowing the rest of the system to track current unstable.
+      inputs.nixpkgs.follows = "nixpkgs-niri";
     };
+    nixpkgs-niri.url = "github:nixos/nixpkgs/643809054d65fdd466a63e3155b8c498cb483c04";
     mango = {
       url = "github:mangowm/mango";
       inputs.nixpkgs.follows = "nixpkgs";
