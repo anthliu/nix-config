@@ -30,6 +30,10 @@ A modular NixOS configuration for three machines:
     ├── europa/           # Hostname: europa (mini PC)
     │   ├── default.nix   # System entry point
     │   └── home.nix      # User entry point
+    ├── callisto/         # Hostname: callisto (ThinkPad T14s Gen 2i)
+    │   ├── default.nix   # System entry point
+    │   ├── home.nix      # User entry point
+    │   └── hardware-configuration.nix # Btrfs root and EFI mounts
     └── thebe/            # Hostname: thebe (WSL guest, runs inside mimas)
         ├── default.nix   # System entry point (WSL-specific)
         └── home.nix      # User entry point
@@ -139,6 +143,12 @@ sudo nixos-rebuild switch --rollback
 Keep physical topology—filesystems, monitors, power limits, and hostnames—in
 the host directory. Reusable modules should describe one capability and avoid
 detecting unrelated capabilities implicitly.
+
+`callisto` uses a 1 GiB EFI partition and the remaining internal SSD as Btrfs.
+It uses the shared core, dev, and desktop profiles, including Steam. Its hardware
+file contains the UUIDs of those partitions. Before installing,
+check the mounts with `findmnt -R /mnt`, then run
+`sudo nixos-install --root /mnt --flake .#callisto`.
 
 ### 3. Proprietary Apps (Antigravity/Jetski)
 

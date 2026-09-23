@@ -65,6 +65,7 @@
         ganymede = mkHost ./hosts/ganymede/default.nix;
         europa = mkHost ./hosts/europa/default.nix;
         thebe = mkHost ./hosts/thebe/default.nix;
+        callisto = mkHost ./hosts/callisto/default.nix;
       };
 
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
