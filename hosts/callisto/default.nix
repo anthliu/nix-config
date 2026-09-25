@@ -8,6 +8,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./battery.nix
     ../../modules/nixos/base.nix
     ../../modules/nixos/users/anthliu.nix
     ../../modules/nixos/desktop/niri.nix
@@ -22,6 +23,7 @@
 
   networking.hostName = "callisto";
   networking.networkmanager.enable = true;
+  networking.networkmanager.wifi.powersave = true;
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

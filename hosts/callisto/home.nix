@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -11,6 +11,13 @@
     ../../modules/home-manager/features/swayidle.nix
     ../../modules/shared/stylix.nix
   ];
+
+  # DMS's integrated lock-before-suspend path has been unreliable here. This
+  # explicit sequence was tested across lock, suspend, wake, and PAM unlock.
+  custom.idle.extraBeforeSleepCommand = ''
+    ${pkgs.dms-shell}/bin/dms ipc call lock lock
+    ${pkgs.coreutils}/bin/sleep 1
+  '';
 
   programs.niri.settings.outputs = {
     "InfoVision Optoelectronics (Kunshan) Co.,Ltd China 0x057D Unknown".scale = 1.0;

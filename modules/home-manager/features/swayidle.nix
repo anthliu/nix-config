@@ -3,6 +3,15 @@
 let
   displayOff = config.custom.idle.displayOffCommand;
   displayOn = config.custom.idle.displayOnCommand;
+  extraBeforeSleep = config.custom.idle.extraBeforeSleepCommand;
+  beforeSleep =
+    if extraBeforeSleep == null then
+      displayOn
+    else
+      toString (pkgs.writeShellScript "swayidle-before-sleep" ''
+        ${displayOn}
+        ${extraBeforeSleep}
+      '');
 in
 {
   options.custom.idle = {
@@ -15,6 +24,11 @@ in
       type = lib.types.str;
       description = "Command to turn on displays for idle management";
       example = "niri msg action power-on-monitors";
+    };
+    extraBeforeSleepCommand = lib.mkOption {
+      type = lib.types.nullOr lib.types.lines;
+      default = null;
+      description = "Optional command run after displays are enabled and before suspend";
     };
   };
 
@@ -113,7 +127,7 @@ in
       # See: https://github.com/niri-wm/niri/issues/2139
       # TODO: Remove when niri handles DRM resume errors gracefully (retry page flips).
       events = {
-        before-sleep = displayOn;
+        before-sleep = beforeSleep;
         after-resume = displayOn;
       };
       timeouts = [
@@ -135,7 +149,7 @@ in
       };
       Service = {
         # WORKAROUND(nvidia-resume race): Same as above.
-        ExecStart = "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${displayOff}' resume '${displayOn}' before-sleep '${displayOn}' after-resume '${displayOn}'";
+        ExecStart = "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${displayOff}' resume '${displayOn}' before-sleep '${beforeSleep}' after-resume '${displayOn}'";
       };
     };
   };
