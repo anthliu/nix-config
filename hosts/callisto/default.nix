@@ -31,6 +31,26 @@
   environment.systemPackages = [ pkgs.brightnessctl ];
   services.fwupd.enable = true;
 
+  # The built-in Synaptics reader (06cb:00f9) is supported by libfprint.
+  # Enabling fprintd also adds fingerprint authentication to the normal NixOS
+  # PAM stacks, including login, sudo, Polkit, and the DMS greeter.
+  services.fprintd.enable = true;
+
+  # DMS starts fingerprint authentication as part of locking before suspend.
+  # If fprintd still owns the Synaptics USB reader when it resets for sleep, the
+  # daemon keeps a stale handle after resume and reports an unsupported firmware
+  # version. Stop it at the sleep boundary; D-Bus starts a clean instance when
+  # DMS retries fingerprint authentication after wake.
+  systemd.services.stop-fprintd-before-sleep = {
+    description = "Stop fprintd before sleep";
+    wantedBy = [ "sleep.target" ];
+    before = [ "sleep.target" ];
+    serviceConfig.Type = "oneshot";
+    script = ''
+      ${pkgs.procps}/bin/pkill -x fprintd || true
+    '';
+  };
+
   # DMS reads laptop batteries through UPower. Its NixOS module enables the
   # power-profiles daemon but currently does not enable UPower itself.
   services.upower.enable = true;

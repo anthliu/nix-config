@@ -19,6 +19,10 @@
     ${pkgs.coreutils}/bin/sleep 1
   '';
 
+  # Slow only the built-in touchpad on Callisto. Keeping this host-local avoids
+  # changing touchpad behavior on the desktop hosts or any mouse-wheel events.
+  programs.niri.settings.input.touchpad.scroll-factor = 0.5;
+
   programs.niri.settings.outputs = {
     "InfoVision Optoelectronics (Kunshan) Co.,Ltd China 0x057D Unknown".scale = 1.0;
 

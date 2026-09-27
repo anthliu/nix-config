@@ -1,15 +1,5 @@
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 
-let
-  antigravity-wrapped = pkgs.symlinkJoin {
-    name = "antigravity";
-    paths = [ inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.default ];
-    buildInputs = [ pkgs.makeWrapper ];
-    postBuild = ''
-      wrapProgram $out/bin/antigravity --add-flags "--disable-gpu"
-    '';
-  };
-in
 {
   programs.alacritty = {
     enable = true;
@@ -25,7 +15,6 @@ in
   };
 
   home.packages = with pkgs; [
-    antigravity-wrapped
     fastfetch
     ffmpeg
     google-chrome

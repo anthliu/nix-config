@@ -8,6 +8,11 @@
 {
   imports = [ inputs.niri.homeModules.niri ];
 
+  programs.fuzzel = {
+    enable = true;
+    settings.main."dpi-aware" = "no";
+  };
+
   # Set idle display commands for swayidle.
   # Use the session's actual niri package (patched niri-unstable), not pkgs.niri —
   # `niri msg` against a mismatched compositor version can fail.

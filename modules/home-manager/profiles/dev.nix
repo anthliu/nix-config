@@ -8,6 +8,7 @@
     (python313.withPackages (ps: [ ps.tkinter ]))
 
     inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
+    antigravity-cli
     opencode
     codex
     pi-coding-agent

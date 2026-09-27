@@ -36,11 +36,6 @@
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    antigravity-nix = {
-      url = "github:jacopone/antigravity-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Tracks upstream Claude Code releases faster than nixpkgs
     claude-code = {
       url = "github:sadjow/claude-code-nix";
