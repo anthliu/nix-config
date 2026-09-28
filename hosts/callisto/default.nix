@@ -51,9 +51,11 @@
     '';
   };
 
-  # DMS reads laptop batteries through UPower. Its NixOS module enables the
-  # power-profiles daemon but currently does not enable UPower itself.
+  # DMS reads batteries through UPower and manages power modes through
+  # power-profiles-daemon. Enabling it also disables the laptop module's
+  # default TLP service.
   services.upower.enable = true;
+  services.power-profiles-daemon.enable = true;
 
   # Callisto is used with the monitor setups from both desktop hosts. Keep the
   # greeter topology alongside the logged-in session settings in home.nix.
