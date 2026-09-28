@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   imports = [
@@ -13,6 +13,9 @@
     ../../modules/shared/stylix.nix
     ./theme.nix
   ];
+
+  programs.noctalia.settings.shell.avatar_path =
+    lib.mkForce "${../../assets/sheba-avatar.jpg}";
 
   # Keep the explicit lock-before-suspend sequence used by this laptop's idle
   # service until its suspend and fingerprint path is tested with Noctalia.

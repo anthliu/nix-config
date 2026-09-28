@@ -37,6 +37,9 @@
   services.fprintd.enable = true;
   services.displayManager.noctalia-greeter.settings.auth.allow_empty_password = true;
 
+  systemd.services.noctalia-avatar.environment.AVATAR =
+    "${../../assets/sheba-avatar.jpg}";
+
   # The lock screen can start fingerprint authentication before suspend.
   # If fprintd still owns the Synaptics USB reader when it resets for sleep, the
   # daemon keeps a stale handle after resume and reports an unsupported firmware
