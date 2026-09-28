@@ -1,7 +1,6 @@
 {
   pkgs,
   inputs,
-  lib,
   ...
 }:
 
@@ -11,7 +10,7 @@
     ./battery.nix
     ../../modules/nixos/base.nix
     ../../modules/nixos/users/anthliu.nix
-    ../../modules/nixos/desktop/niri.nix
+    ../../modules/nixos/desktop/niri-noctalia.nix
     ../../modules/nixos/desktop/stylix.nix
     ../../modules/nixos/services/nix-ld.nix
     ../../modules/nixos/services/steam.nix
@@ -33,14 +32,14 @@
 
   # The built-in Synaptics reader (06cb:00f9) is supported by libfprint.
   # Enabling fprintd also adds fingerprint authentication to the normal NixOS
-  # PAM stacks, including login, sudo, Polkit, and the DMS greeter.
+  # PAM stacks, including greetd for the Noctalia greeter.
   services.fprintd.enable = true;
 
-  # DMS starts fingerprint authentication as part of locking before suspend.
+  # The lock screen can start fingerprint authentication before suspend.
   # If fprintd still owns the Synaptics USB reader when it resets for sleep, the
   # daemon keeps a stale handle after resume and reports an unsupported firmware
-  # version. Stop it at the sleep boundary; D-Bus starts a clean instance when
-  # DMS retries fingerprint authentication after wake.
+  # version. Stop it at the sleep boundary; D-Bus starts a clean instance for
+  # the next fingerprint request after wake.
   systemd.services.stop-fprintd-before-sleep = {
     description = "Stop fprintd before sleep";
     wantedBy = [ "sleep.target" ];
@@ -51,36 +50,10 @@
     '';
   };
 
-  # DMS reads batteries through UPower and manages power modes through
-  # power-profiles-daemon. Enabling it also disables the laptop module's
-  # default TLP service.
+  # Noctalia reads batteries through UPower and changes power modes through
+  # power-profiles-daemon. This also disables the laptop module's default TLP.
   services.upower.enable = true;
   services.power-profiles-daemon.enable = true;
-
-  # Callisto is used with the monitor setups from both desktop hosts. Keep the
-  # greeter topology alongside the logged-in session settings in home.nix.
-  services.displayManager.dms-greeter = {
-    configHome = "/home/anthliu";
-    compositor.customConfig = lib.mkAfter ''
-      output "Dell Inc. AW3423DWF BDRK2S3" {
-          mode "3440x1440@164.900"
-          scale 1.0
-          position x=0 y=0
-      }
-
-      output "Samsung Electric Company Odyssey G81SF HNBYA00490" {
-          mode "3840x2160@239.996"
-          scale 1.25
-          position x=3440 y=0
-      }
-
-      output "Dell Inc. DELL P2723DE 8VCSX34" {
-          mode "2560x1440@59.951"
-          scale 1.0
-          position x=0 y=0
-      }
-    '';
-  };
 
   # The external keyboard already swaps these keys in its own firmware. Apply
   # the remap only to the ThinkPad's built-in AT keyboard to avoid swapping it

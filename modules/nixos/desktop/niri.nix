@@ -1,6 +1,5 @@
 {
   pkgs,
-  inputs,
   config,
   lib,
   ...
@@ -9,14 +8,9 @@
 {
   imports = [
     ./dms.nix
-    ./wayland-common.nix
+    ./niri-base.nix
   ];
 
-  # --- Niri & DMS ---
-  programs.niri = {
-    enable = true;
-    package = import ../../../packages/niri-patched.nix { inherit pkgs inputs; };
-  };
   # --- Display Manager (greetd + dms-greeter, rendered by niri) ---
   # NOTE: switched off GDM. GDM 50 (GNOME 50) fails to launch non-GNOME Wayland
   # sessions ("Unable to run session" / session never registers), which broke
@@ -75,27 +69,5 @@
     });
   '';
 
-  environment.systemPackages = with pkgs; [
-    xwayland-satellite
-    jq # dms-greeter reads the cursor theme with it, off the pam_env PATH
-    xdg-desktop-portal-gtk
-    xdg-desktop-portal-gnome
-  ];
-
-  # --- Portals Configuration ---
-  # Niri module usually handles xdg.portal.enable = true, but we ensure extra portals are present
-  xdg.portal = {
-    enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-gnome
-    ];
-    # gtk is the default backend, but it doesn't implement ScreenCast/Screenshot,
-    # so route those to the gnome backend (needed for Discord/OBS screen sharing).
-    config.common = {
-      default = "gtk";
-      "org.freedesktop.impl.portal.ScreenCast" = "gnome";
-      "org.freedesktop.impl.portal.Screenshot" = "gnome";
-    };
-  };
+  environment.systemPackages = [ pkgs.jq ]; # dms-greeter reads the cursor theme with it.
 }
