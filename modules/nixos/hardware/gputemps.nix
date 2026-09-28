@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
@@ -48,16 +46,4 @@ in
       done
     '';
   };
-
-  environment.etc = lib.mkIf config.programs.dms-shell.enable (
-    let
-      plugin = pkgs.callPackage ../../../packages/gputemps-dms-plugin { };
-    in
-    {
-      "xdg/quickshell/dms-plugins/gpuTemps/plugin.json".source =
-        "${plugin}/share/dms-plugins/gpuTemps/plugin.json";
-      "xdg/quickshell/dms-plugins/gpuTemps/GpuTempsWidget.qml".source =
-        "${plugin}/share/dms-plugins/gpuTemps/GpuTempsWidget.qml";
-    }
-  );
 }

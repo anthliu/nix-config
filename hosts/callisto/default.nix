@@ -12,6 +12,7 @@
     ../../modules/nixos/users/anthliu.nix
     ../../modules/nixos/desktop/niri-noctalia.nix
     ../../modules/nixos/desktop/stylix.nix
+    ./theme.nix
     ../../modules/nixos/services/nix-ld.nix
     ../../modules/nixos/services/steam.nix
     ../../modules/nixos/hardware/swap.nix
@@ -34,6 +35,7 @@
   # Enabling fprintd also adds fingerprint authentication to the normal NixOS
   # PAM stacks, including greetd for the Noctalia greeter.
   services.fprintd.enable = true;
+  services.displayManager.noctalia-greeter.settings.auth.allow_empty_password = true;
 
   # The lock screen can start fingerprint authentication before suspend.
   # If fprintd still owns the Synaptics USB reader when it resets for sleep, the
@@ -52,7 +54,6 @@
 
   # Noctalia reads batteries through UPower and changes power modes through
   # power-profiles-daemon. This also disables the laptop module's default TLP.
-  services.upower.enable = true;
   services.power-profiles-daemon.enable = true;
 
   # The external keyboard already swaps these keys in its own firmware. Apply

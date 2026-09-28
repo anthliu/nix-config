@@ -3,7 +3,6 @@
 {
   imports = [
     inputs.mango.nixosModules.mango
-    ./dms.nix
     ./wayland-common.nix
   ];
 
@@ -19,23 +18,6 @@
     WLR_NO_HARDWARE_CURSORS = "1";
   };
 
-  # Fix: Ensure DMS can find quickshell (qs) and system utilities
-  # We use the standard NixOS 'path' attribute which appends to the unit environment
-  systemd.user.services.dms = {
-    path = with pkgs; [
-      quickshell
-      bash
-      coreutils
-      gnugrep
-      procps
-      which
-      "/run/wrappers"
-    ];
-    wantedBy = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-    serviceConfig.StartLimitBurst = 10;
-  };
-
   # --- Display Manager (GDM) ---
   services.xserver.enable = true;
   services.displayManager.gdm = {
@@ -48,7 +30,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    quickshell # Needed for the DMS shell UI components
     xwayland-satellite
     wlopm
   ];

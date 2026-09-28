@@ -1,6 +1,6 @@
 # NixOS Flake Configuration
 
-A modular NixOS configuration for three machines:
+A modular NixOS configuration for four machines:
 
 * **Flakes** for reproducibility.
 * **Home Manager** for user environment management.
@@ -14,7 +14,7 @@ A modular NixOS configuration for three machines:
 ├── flake.lock            # Pinned versions (source of truth)
 ├── modules/              # Reusable, host-independent logic
 │   ├── nixos/
-│   │   ├── desktop/      # Compositors, DMS, shared Wayland services
+│   │   ├── desktop/      # Compositors, Noctalia greeter, shared Wayland services
 │   │   ├── hardware/     # Drivers and independently selectable hardware features
 │   │   ├── services/     # System services and runtime compatibility
 │   │   └── users/        # Shared NixOS/Home Manager user integration
@@ -150,7 +150,26 @@ file contains the UUIDs of those partitions. Before installing,
 check the mounts with `findmnt -R /mnt`, then run
 `sudo nixos-install --root /mnt --flake .#callisto`.
 
-### 3. Proprietary Apps (Antigravity/Jetski)
+### 3. Wallpapers and Colors
+
+Callisto, Ganymede, and Europa each choose a wallpaper in their own
+`hosts/<host>/theme.nix`. To change one, copy the image into `assets/`, update
+that host's `stylix.image` path, add the new image to Git, and rebuild the host.
+The rebuild generates a dark Stylix palette from that image using the same
+Matugen tonal-spot scheme. NixOS and Home Manager use the same host setting.
+All graphical hosts use Noctalia Shell and Greeter; Thebe is a headless WSL host.
+
+```bash
+sudo nixos-rebuild switch --flake .#callisto
+xdg-open ~/.config/stylix/palette.html
+```
+
+Changing a wallpaper in Noctalia's picker does not update the Nix-managed
+Stylix palette. Update the host's image in this repo and rebuild to keep them
+in sync. Ganymede's GPU temperature widget reads the local gputemps service
+through a Nix-managed Noctalia plugin.
+
+### 4. Proprietary Apps (Antigravity/Jetski)
 
 If an app isn't in Nixpkgs or fails to build:
 

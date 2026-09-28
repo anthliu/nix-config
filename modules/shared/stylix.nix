@@ -10,7 +10,7 @@
     {
       stylix = {
         enable = true;
-        image = ../../assets/wallpaper.png;
+        image = ../../assets/autumn-fuji.png;
         base16Scheme = "${pkgs.base16-schemes}/share/themes/horizon-dark.yaml";
 
         cursor = {

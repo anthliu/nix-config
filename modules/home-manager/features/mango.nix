@@ -285,7 +285,7 @@
       axisbind=SUPER,UP,viewtoleft_have_client
       axisbind=SUPER,DOWN,viewtoright_have_client
 
-      # Run autostart (activates systemd graphical-session.target → DMS Shell)
+      # Run autostart to activate the graphical session target.
       exec-once=~/.config/mango/autostart.sh
 
       # Essential services
@@ -296,12 +296,12 @@
 
     autostart_sh = ''
       # Synchronize the full user environment with the systemd session bus.
-      # This ensures dms.service knows who you are and where your display is.
+      # This passes Wayland variables to user services.
       dbus-update-activation-environment --systemd --all
 
 
       # Start the standard graphical session target
-      # This automatically triggers dms.service and other session-dependent units
+      # This starts session-dependent user services.
       systemctl --user start graphical-session.target
     '';
 

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   imports = [
@@ -7,10 +7,40 @@
     ../../modules/home-manager/profiles/graphical.nix
     ../../modules/home-manager/features/local-ai.nix
     ../../modules/home-manager/features/niri.nix
+    ../../modules/home-manager/features/noctalia.nix
     ../../modules/home-manager/features/qmk.nix
     ../../modules/home-manager/features/swayidle.nix
     ../../modules/shared/stylix.nix
+    ./theme.nix
   ];
+
+  programs.noctalia.settings = {
+    plugins = {
+      enabled = [ "anthliu/gputemps" ];
+      source = [
+        {
+          name = "nix-config";
+          kind = "path";
+          location = "${../../packages/noctalia-plugins}";
+          enabled = true;
+        }
+      ];
+    };
+    widget.gpu-temps.type = "anthliu/gputemps:temps";
+    bar.default.end = lib.mkForce [
+      "tray"
+      "notifications"
+      "clipboard"
+      "brightness"
+      "volume"
+      "cpu"
+      "memory"
+      "gpu-temps"
+      "battery"
+      "control-center"
+      "session"
+    ];
+  };
 
   home.packages = with pkgs; [
     (writeShellScriptBin "google-chrome-igpu" ''

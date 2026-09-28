@@ -1,0 +1,11 @@
+id = "anthliu/gputemps"
+name = "GPU Temperatures"
+version = "1.0.0"
+plugin_api = 23
+author = "anthliu"
+description = "Core, junction, and VRAM temperatures from the gputemps service"
+icon = "temperature"
+
+[[widget]]
+id = "temps"
+entry = "widget.luau"

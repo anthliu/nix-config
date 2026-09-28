@@ -1,4 +1,4 @@
-{ inputs, lib, ... }:
+{ inputs, ... }:
 
 {
   imports = [
@@ -8,8 +8,9 @@
 
     ../../modules/nixos/base.nix
     ../../modules/nixos/users/anthliu.nix
-    ../../modules/nixos/desktop/niri.nix
+    ../../modules/nixos/desktop/niri-noctalia.nix
     ../../modules/nixos/desktop/stylix.nix
+    ./theme.nix
     ../../modules/nixos/services/nix-ld.nix
     ../../modules/nixos/services/steam.nix
     ../../modules/nixos/services/remote-access.nix
@@ -23,15 +24,9 @@
   networking.hostName = "europa";
   networking.networkmanager.enable = true;
 
-  services.displayManager.dms-greeter = {
-    configHome = "/home/anthliu";
-    compositor.customConfig = lib.mkAfter ''
-      output "Dell Inc. DELL P2723DE 8VCSX34" {
-          mode "2560x1440@59.951"
-          scale 1.0
-          position x=0 y=0
-      }
-    '';
+  services.displayManager.noctalia-greeter.settings.output = {
+    scales = "Dell Inc. DELL P2723DE 8VCSX34:1";
+    refresh_rate = "Dell Inc. DELL P2723DE 8VCSX34:59.951";
   };
 
   # Bootloader

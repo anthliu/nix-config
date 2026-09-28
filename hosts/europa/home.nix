@@ -7,9 +7,11 @@
     ../../modules/home-manager/profiles/graphical.nix
     ../../modules/home-manager/features/local-ai.nix
     ../../modules/home-manager/features/niri.nix
+    ../../modules/home-manager/features/noctalia.nix
     ../../modules/home-manager/features/qmk.nix
     ../../modules/home-manager/features/swayidle.nix
     ../../modules/shared/stylix.nix
+    ./theme.nix
   ];
 
   programs.niri.settings.outputs."Dell Inc. DELL P2723DE 8VCSX34" = {

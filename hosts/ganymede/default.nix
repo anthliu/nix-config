@@ -1,13 +1,14 @@
-{ inputs, lib, ... }:
+{ inputs, pkgs, config, lib, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
     ../../modules/nixos/base.nix
     ../../modules/nixos/users/anthliu.nix
-    ../../modules/nixos/desktop/niri.nix
+    ../../modules/nixos/desktop/niri-noctalia.nix
     ../../modules/nixos/desktop/nvidia-apps.nix
     ../../modules/nixos/desktop/stylix.nix
+    ./theme.nix
     ../../modules/nixos/hardware/gputemps.nix
     ../../modules/nixos/hardware/nvidia.nix
     ../../modules/nixos/hardware/nvidia-rtx3090.nix
@@ -29,22 +30,16 @@
   networking.hostName = "ganymede";
   networking.networkmanager.enable = true;
 
-  services.displayManager.dms-greeter = {
-    configHome = "/home/anthliu";
-    compositor.customConfig = lib.mkAfter ''
-      output "Dell Inc. AW3423DWF BDRK2S3" {
-          mode "3440x1440@164.900"
-          scale 1.0
-          position x=0 y=0
-      }
-
-      output "Samsung Electric Company Odyssey G81SF HNBYA00490" {
-          mode "3840x2160@239.996"
-          scale 1.25
-          position x=3440 y=0
-      }
-    '';
+  services.displayManager.noctalia-greeter.settings.output = {
+    layout = "Dell Inc. AW3423DWF BDRK2S3:0,0; Samsung Electric Company Odyssey G81SF HNBYA00490:3440,0";
+    scales = "Dell Inc. AW3423DWF BDRK2S3:1; Samsung Electric Company Odyssey G81SF HNBYA00490:1.25";
+    refresh_rate = "Dell Inc. AW3423DWF BDRK2S3:164.900; Samsung Electric Company Odyssey G81SF HNBYA00490:239.996";
   };
+
+  # Greeter 1.5.0 can hit a wlroots direct scan-out failure on multi-output
+  # setups. Force compositing for this NVIDIA host's login screen.
+  services.greetd.settings.default_session.command = lib.mkForce
+    "${pkgs.coreutils}/bin/env WLR_SCENE_DISABLE_DIRECT_SCANOUT=1 ${config.services.displayManager.noctalia-greeter.package}/bin/noctalia-greeter-session";
 
   # Bootloader (Specific to this dual-boot setup)
   boot.loader.systemd-boot.enable = true;
