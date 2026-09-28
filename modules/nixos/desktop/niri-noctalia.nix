@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 
 let
   colors = config.lib.stylix.colors.withHashtag;
@@ -56,6 +56,7 @@ in
     requires = [ "accounts-daemon.service" ];
     after = [ "accounts-daemon.service" ];
     before = [ "greetd.service" ];
+    environment.AVATAR = lib.mkDefault "${../../../assets/gustav-avatar.jpg}";
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -68,7 +69,7 @@ in
       ${pkgs.systemd}/bin/busctl --system call \
         org.freedesktop.Accounts "/org/freedesktop/Accounts/User$user_id" \
         org.freedesktop.Accounts.User SetIconFile s \
-        ${../../../assets/gustav-avatar.jpg}
+        "$AVATAR"
     '';
   };
 }

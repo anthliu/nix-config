@@ -3,5 +3,5 @@
 {
   imports = [ ../../modules/shared/matugen-wallpaper-palette.nix ];
 
-  stylix.image = lib.mkForce ../../assets/autumn-fuji.png;
+  stylix.image = lib.mkForce ../../assets/duck-pond.png;
 }

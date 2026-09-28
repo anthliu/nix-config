@@ -15,6 +15,7 @@
   ];
 
   programs.noctalia.settings = {
+    shell.avatar_path = lib.mkForce "${../../assets/siamese-cat-avatar.jpg}";
     plugins = {
       enabled = [ "anthliu/gputemps" ];
       source = [

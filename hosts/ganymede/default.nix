@@ -41,6 +41,9 @@
   services.greetd.settings.default_session.command = lib.mkForce
     "${pkgs.coreutils}/bin/env WLR_SCENE_DISABLE_DIRECT_SCANOUT=1 ${config.services.displayManager.noctalia-greeter.package}/bin/noctalia-greeter-session";
 
+  systemd.services.noctalia-avatar.environment.AVATAR =
+    "${../../assets/siamese-cat-avatar.jpg}";
+
   # Bootloader (Specific to this dual-boot setup)
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.edk2-uefi-shell.enable = true;
