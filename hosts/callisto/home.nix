@@ -1,5 +1,26 @@
 { pkgs, lib, ... }:
 
+let
+  batteryPowerProfile = pkgs.writeShellScript "noctalia-battery-power-profile" ''
+    set -euo pipefail
+
+    percentage="''${NOCTALIA_BATTERY_PERCENT:-}"
+    [[ "$percentage" =~ ^[0-9]+$ ]] || exit 0
+
+    state_file="''${XDG_RUNTIME_DIR:?}/noctalia-low-battery-power-saver"
+    if (( 10#$percentage <= 20 )); then
+      [[ "''${NOCTALIA_BATTERY_STATE:-}" == "discharging" && ! -e "$state_file" ]] || exit 0
+
+      ${pkgs.noctalia}/bin/noctalia msg power-set power-saver
+      ${pkgs.noctalia}/bin/noctalia msg notification-show "Battery low" "Battery at $percentage%. Power saver enabled."
+      ${pkgs.coreutils}/bin/touch "$state_file"
+    elif (( 10#$percentage >= 25 )) && [[ -e "$state_file" ]]; then
+      ${pkgs.noctalia}/bin/noctalia msg power-set balanced
+      ${pkgs.noctalia}/bin/noctalia msg notification-show "Battery recovered" "Battery at $percentage%. Balanced profile enabled."
+      ${pkgs.coreutils}/bin/rm -f "$state_file"
+    fi
+  '';
+in
 {
   imports = [
     ../../modules/home-manager/profiles/core.nix
@@ -16,6 +37,13 @@
 
   programs.noctalia.settings.shell.avatar_path =
     lib.mkForce "${../../assets/sheba-avatar.jpg}";
+
+  programs.noctalia.settings.bar.default.monitor.laptop = {
+    match = "InfoVision Optoelectronics";
+    scale = 1.15;
+  };
+
+  programs.noctalia.settings.hooks.battery_percentage_changed = "${batteryPowerProfile}";
 
   # Keep the explicit lock-before-suspend sequence used by this laptop's idle
   # service until its suspend and fingerprint path is tested with Noctalia.

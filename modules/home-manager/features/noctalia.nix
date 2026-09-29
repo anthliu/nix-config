@@ -18,12 +18,14 @@
       wallpaper.enabled = true;
       bar.default = {
         position = "bottom";
-        auto_hide = true;
+        auto_hide = false;
+        smart_auto_hide = true;
         reserve_space = false;
         background_opacity = 0.0;
         shadow = false;
+        widget_spacing = 10;
         start = [ "launcher" "wallpaper" "workspaces" "media" ];
-        center = [ "clock" "weather" ];
+        center = [ "clock" "clock-weather-gap" "weather" ];
         end = [
           "tray"
           "notifications"
@@ -40,10 +42,13 @@
       widget = {
         media.hide_when_no_media = true;
         clock.format = "{:%-I:%M %p} · {:%a, %b %-d}";
+        clock-weather-gap = {
+          type = "spacer";
+          length = 12;
+        };
         control-center = {
-          scale = 1.3;
           capsule = true;
-          capsule_padding = 18;
+          capsule_padding = 24;
         };
         cpu = {
           type = "sysmon";
