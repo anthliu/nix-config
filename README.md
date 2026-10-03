@@ -186,6 +186,12 @@ The greeter uses automatic per-display DPI scaling.
 Its output overrides accept connector names, such as `DP-6`, rather than Niri's
 monitor descriptions.
 
+The lock screen shows authentication status, including fingerprint prompts.
+Callisto checks passwords before fingerprint in the `login` PAM stack used by
+Noctalia, so submitting a correct password does not wait for a fingerprint scan.
+Noctalia also supports fingerprint unlock directly; the greeter can request a
+fingerprint by submitting an empty password.
+
 Noctalia saves GUI overrides in `~/.local/state/noctalia/settings.toml`, which
 can override these Nix defaults. When first applying the layout on Callisto (or
 revising a saved layout), back up that file and remove only its

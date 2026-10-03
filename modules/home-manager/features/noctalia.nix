@@ -53,7 +53,8 @@ let
         box_height = 70.0;
         settings = {
           layout = "compact";
-          show_unlock_hint = false;
+          # Also controls fingerprint prompts and authentication progress.
+          show_unlock_hint = true;
           show_login_button = false;
           show_keyboard_layout = false;
           show_session_buttons = false;

@@ -1,6 +1,7 @@
 {
   pkgs,
   inputs,
+  config,
   ...
 }:
 
@@ -35,6 +36,11 @@
   # Enabling fprintd also adds fingerprint authentication to the normal NixOS
   # PAM stacks, including greetd for the Noctalia greeter.
   services.fprintd.enable = true;
+  # Noctalia verifies passwords with the login PAM stack and handles fingerprint
+  # scans separately. Check the password before PAM starts another scan, keeping
+  # fingerprint available to greetd when its submitted password is empty.
+  security.pam.services.login.rules.auth.fprintd.order =
+    config.security.pam.services.login.rules.auth.unix.order + 10;
   services.displayManager.noctalia-greeter.settings.auth.allow_empty_password = true;
 
   systemd.services.noctalia-avatar.environment.AVATAR =
