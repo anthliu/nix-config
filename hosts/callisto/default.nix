@@ -34,17 +34,12 @@
 
   # The built-in Synaptics reader (06cb:00f9) is supported by libfprint.
   # Enabling fprintd also adds fingerprint authentication to the normal NixOS
-  # PAM stacks, including greetd for the Noctalia greeter.
+  # PAM stacks, including the login stack greetd uses for ReGreet.
   services.fprintd.enable = true;
-  # Noctalia verifies passwords with the login PAM stack and handles fingerprint
-  # scans separately. Check the password before PAM starts another scan, keeping
-  # fingerprint available to greetd when its submitted password is empty.
+  # Noctalia checks passwords through login PAM and scans fingerprints separately.
+  # Keep passwords first; an empty password in ReGreet can fall through to fprintd.
   security.pam.services.login.rules.auth.fprintd.order =
     config.security.pam.services.login.rules.auth.unix.order + 10;
-  services.displayManager.noctalia-greeter.settings.auth.allow_empty_password = true;
-
-  systemd.services.noctalia-avatar.environment.AVATAR =
-    "${../../assets/sheba-avatar.jpg}";
 
   # The lock screen can start fingerprint authentication before suspend.
   # If fprintd still owns the Synaptics USB reader when it resets for sleep, the

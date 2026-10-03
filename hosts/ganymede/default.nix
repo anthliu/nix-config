@@ -1,4 +1,4 @@
-{ inputs, pkgs, config, lib, ... }:
+{ inputs, ... }:
 
 {
   imports = [
@@ -29,14 +29,6 @@
   # --- Machine Specifics ---
   networking.hostName = "ganymede";
   networking.networkmanager.enable = true;
-
-  # Greeter 1.5.0 can hit a wlroots direct scan-out failure on multi-output
-  # setups. Force compositing for this NVIDIA host's login screen.
-  services.greetd.settings.default_session.command = lib.mkForce
-    "${pkgs.coreutils}/bin/env WLR_SCENE_DISABLE_DIRECT_SCANOUT=1 ${config.services.displayManager.noctalia-greeter.package}/bin/noctalia-greeter-session";
-
-  systemd.services.noctalia-avatar.environment.AVATAR =
-    "${../../assets/siamese-cat-avatar.jpg}";
 
   # Bootloader (Specific to this dual-boot setup)
   boot.loader.systemd-boot.enable = true;

@@ -14,7 +14,7 @@ A modular NixOS configuration for four machines:
 ├── flake.lock            # Pinned versions (source of truth)
 ├── modules/              # Reusable, host-independent logic
 │   ├── nixos/
-│   │   ├── desktop/      # Compositors, Noctalia greeter, shared Wayland services
+│   │   ├── desktop/      # Compositors, ReGreet login, shared Wayland services
 │   │   ├── hardware/     # Drivers and independently selectable hardware features
 │   │   ├── services/     # System services and runtime compatibility
 │   │   └── users/        # Shared NixOS/Home Manager user integration
@@ -160,7 +160,7 @@ Callisto, Ganymede, and Europa each choose a wallpaper in their own
 that host's `stylix.image` path, add the new image to Git, and rebuild the host.
 The rebuild generates a dark Stylix palette from that image using the same
 Matugen tonal-spot scheme. NixOS and Home Manager use the same host setting.
-All graphical hosts use Noctalia Shell and Greeter; Thebe is a headless WSL host.
+All graphical hosts use Noctalia Shell and ReGreet; Thebe is a headless WSL host.
 
 ```bash
 sudo nixos-rebuild switch --flake .#callisto
@@ -182,15 +182,29 @@ larger clock box for visual balance. A scoped native Fontconfig rule selects the
 actual Medium face despite Noctalia's internal Bold request.
 Native media controls sit below the password field and hide when no player is
 available.
-The greeter uses automatic per-display DPI scaling.
-Its output overrides accept connector names, such as `DP-6`, rather than Niri's
-monitor descriptions.
+
+ReGreet runs under a separate Niri greeter session. Its monitor scales are
+generated from the host's Home Manager Niri output settings, matched by monitor
+identity so docking into a different port keeps the same scale. Unconfigured
+monitors use Niri's automatic DPI scaling. GTK uses fixed logical widget sizes
+with the desktop DPI scale; the interface is not enlarged to fill higher
+resolutions. There is no global `GDK_SCALE` override. Fields show an accent
+outline while focused or open, and no outline while idle. The form stays centered
+and the wallpaper covers the screen. ReGreet remembers the last user/session after the
+first successful login and then opens authentication directly.
+
+ReGreet shows one login window. Move it between monitors with
+`Super+Shift+Left` / `Super+Shift+Right`. Its configuration is generated at
+`/etc/greetd/regreet.toml`, `/etc/greetd/regreet.css`, and `/etc/greetd/niri.kdl`.
+Callisto's fingerprint authentication continues through the normal greetd PAM
+login stack. After switching this greeter change, reboot to start the new
+greetd configuration; the NixOS module avoids restarting an active login session.
 
 The lock screen shows authentication status, including fingerprint prompts.
 Callisto checks passwords before fingerprint in the `login` PAM stack used by
-Noctalia, so submitting a correct password does not wait for a fingerprint scan.
-Noctalia also supports fingerprint unlock directly; the greeter can request a
-fingerprint by submitting an empty password.
+Noctalia and ReGreet, so submitting a correct password does not wait for a
+fingerprint scan. Noctalia also supports fingerprint unlock directly; ReGreet can
+request a fingerprint by submitting an empty password.
 
 Noctalia saves GUI overrides in `~/.local/state/noctalia/settings.toml`, which
 can override these Nix defaults. When first applying the layout on Callisto (or
