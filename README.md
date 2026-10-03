@@ -196,15 +196,17 @@ first successful login and then opens authentication directly.
 ReGreet shows one login window. Move it between monitors with
 `Super+Shift+Left` / `Super+Shift+Right`. Its configuration is generated at
 `/etc/greetd/regreet.toml`, `/etc/greetd/regreet.css`, and `/etc/greetd/niri.kdl`.
-Callisto's fingerprint authentication continues through the normal greetd PAM
-login stack. After switching this greeter change, reboot to start the new
+Callisto starts fingerprint authentication automatically for the remembered
+user/session. A successful scan logs in without Enter or a password. After
+three failed scans or a 30-second timeout, ReGreet falls back to a password.
+PAM runs these methods sequentially, so the password prompt waits for the
+fingerprint attempt to finish. After switching greeters, reboot to start the new
 greetd configuration; the NixOS module avoids restarting an active login session.
 
 The lock screen shows authentication status, including fingerprint prompts.
-Callisto checks passwords before fingerprint in the `login` PAM stack used by
-Noctalia and ReGreet, so submitting a correct password does not wait for a
-fingerprint scan. Noctalia also supports fingerprint unlock directly; ReGreet can
-request a fingerprint by submitting an empty password.
+Noctalia supports fingerprint unlock directly. Callisto keeps its `login` PAM
+stack password-only so a password unlock does not start a competing scan;
+ReGreet's fingerprint-first rule lives in the separate `greetd` PAM stack.
 
 Noctalia saves GUI overrides in `~/.local/state/noctalia/settings.toml`, which
 can override these Nix defaults. When first applying the layout on Callisto (or
