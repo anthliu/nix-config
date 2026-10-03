@@ -24,11 +24,6 @@
   networking.hostName = "europa";
   networking.networkmanager.enable = true;
 
-  services.displayManager.noctalia-greeter.settings.output = {
-    scales = "Dell Inc. DELL P2723DE 8VCSX34:1";
-    refresh_rate = "Dell Inc. DELL P2723DE 8VCSX34:59.951";
-  };
-
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

@@ -30,12 +30,6 @@
   networking.hostName = "ganymede";
   networking.networkmanager.enable = true;
 
-  services.displayManager.noctalia-greeter.settings.output = {
-    layout = "Dell Inc. AW3423DWF BDRK2S3:0,0; Samsung Electric Company Odyssey G81SF HNBYA00490:3440,0";
-    scales = "Dell Inc. AW3423DWF BDRK2S3:1; Samsung Electric Company Odyssey G81SF HNBYA00490:1.25";
-    refresh_rate = "Dell Inc. AW3423DWF BDRK2S3:164.900; Samsung Electric Company Odyssey G81SF HNBYA00490:239.996";
-  };
-
   # Greeter 1.5.0 can hit a wlroots direct scan-out failure on multi-output
   # setups. Force compositing for this NVIDIA host's login screen.
   services.greetd.settings.default_session.command = lib.mkForce

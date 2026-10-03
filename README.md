@@ -85,6 +85,9 @@ nix flake update
 
 ```
 
+To update only Codex, run `nix flake update codex-cli-nix`. Its package tracks
+OpenAI releases independently of the system nixpkgs pin.
+
 
 2. **Apply the Update**:
 ```bash
@@ -168,6 +171,27 @@ Changing a wallpaper in Noctalia's picker does not update the Nix-managed
 Stylix palette. Update the host's image in this repo and rebuild to keep them
 in sync. Ganymede's GPU temperature widget reads the local gputemps service
 through a Nix-managed Noctalia plugin.
+
+#### Lock and greeter appearance
+
+The shared Noctalia configuration uses native settings: a smaller stacked clock
+on `eDP-*` laptop panels and a larger clock/password field on external outputs.
+Widget centers follow the display's logical dimensions; widget sizes remain
+fixed within each preset. The time uses Roboto Medium with tabular digits and a
+larger clock box for visual balance. A scoped native Fontconfig rule selects the
+actual Medium face despite Noctalia's internal Bold request.
+Native media controls sit below the password field and hide when no player is
+available.
+The greeter uses automatic per-display DPI scaling.
+Its output overrides accept connector names, such as `DP-6`, rather than Niri's
+monitor descriptions.
+
+Noctalia saves GUI overrides in `~/.local/state/noctalia/settings.toml`, which
+can override these Nix defaults. When first applying the layout on Callisto (or
+revising a saved layout), back up that file and remove only its
+`[lockscreen_widgets]` tables after switching, then run
+`noctalia msg config-reload`. Preserve the other sections. No migration hook or
+runtime helper is installed.
 
 ### 4. Proprietary Apps (Antigravity/Jetski)
 

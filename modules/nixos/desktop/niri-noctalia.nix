@@ -13,12 +13,18 @@ in
   services.displayManager.noctalia-greeter = {
     enable = true;
     settings = {
+      session.default = "niri";
       user.default = "anthliu";
       idle.timeout = 300;
+      # Leave output scale automatic: the greeter sizes each display from its DPI.
+      # Its output overrides require connector names, unlike Niri's EDID selectors.
       appearance = {
         scheme = "Synced";
         theme_mode = config.stylix.polarity;
         font_family = config.stylix.fonts.sansSerif.name;
+        hide_logo = true;
+        scheme_selector_position = "hidden";
+        corner_radius_scale = 0.6;
         wallpaper.path = config.stylix.image;
         # Match the semantic colors Stylix supplies to Noctalia Shell.
         palette = {
@@ -32,9 +38,10 @@ in
           on_error = colors.base00;
           surface = colors.base00;
           on_surface = colors.base05;
-          surface_variant = colors.base01;
+          # Soften the card while keeping dropdown backgrounds readable.
+          surface_variant = "${colors.base01}b3";
           on_surface_variant = colors.base04;
-          outline = colors.base03;
+          outline = "${colors.base03}40";
           shadow = colors.base00;
           hover = colors.base0C;
           on_hover = colors.base00;
