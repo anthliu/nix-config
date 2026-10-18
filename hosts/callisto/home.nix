@@ -35,8 +35,7 @@ in
     ./theme.nix
   ];
 
-  programs.noctalia.settings.shell.avatar_path =
-    lib.mkForce "${../../assets/sheba-avatar.jpg}";
+  programs.noctalia.settings.shell.avatar_path = lib.mkForce "${../../assets/sheba-avatar.jpg}";
 
   programs.noctalia.settings.bar.default.monitor.laptop = {
     match = "InfoVision Optoelectronics";
@@ -54,46 +53,41 @@ in
 
   # Slow only the built-in touchpad on Callisto. Keeping this host-local avoids
   # changing touchpad behavior on the desktop hosts or any mouse-wheel events.
-  programs.niri.settings.input.touchpad.scroll-factor = 0.5;
+  wayland.windowManager.niri.settings.input.touchpad.scroll-factor = 0.5;
 
-  programs.niri.settings.outputs = {
-    # Keep the laptop on the left. Niri automatically places connected external
-    # displays to the right, even when the docking setup changes.
-    "InfoVision Optoelectronics (Kunshan) Co.,Ltd China 0x057D Unknown" = {
-      scale = 1.0;
-      position = {
-        x = 0;
-        y = 0;
+  wayland.windowManager.niri.settings._children = [
+    {
+      output = {
+        _args = [ "Dell Inc. AW3423DWF BDRK2S3" ];
+        mode = "3440x1440@164.900";
+        scale = 1.0;
       };
-    };
-
-    "Dell Inc. AW3423DWF BDRK2S3" = {
-      mode = {
-        width = 3440;
-        height = 1440;
-        refresh = 164.900;
+    }
+    {
+      output = {
+        _args = [ "Dell Inc. DELL P2723DE 8VCSX34" ];
+        mode = "2560x1440@59.951";
+        scale = 1.0;
       };
-      scale = 1.0;
-    };
-
-    "Samsung Electric Company Odyssey G81SF HNBYA00490" = {
-      mode = {
-        width = 3840;
-        height = 2160;
-        refresh = 239.996;
+    }
+    {
+      output = {
+        _args = [ "InfoVision Optoelectronics (Kunshan) Co.,Ltd China 0x057D Unknown" ];
+        scale = 1.0;
+        position._props = {
+          x = 0;
+          y = 0;
+        };
       };
-      scale = 1.25;
-    };
-
-    "Dell Inc. DELL P2723DE 8VCSX34" = {
-      mode = {
-        width = 2560;
-        height = 1440;
-        refresh = 59.951;
+    }
+    {
+      output = {
+        _args = [ "Samsung Electric Company Odyssey G81SF HNBYA00490" ];
+        mode = "3840x2160@239.996";
+        scale = 1.25;
       };
-      scale = 1.0;
-    };
-  };
+    }
+  ];
 
   home.stateVersion = "25.11";
 }

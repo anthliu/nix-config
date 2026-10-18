@@ -1,8 +1,7 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
-    inputs.mango.nixosModules.mango
     ./wayland-common.nix
   ];
 

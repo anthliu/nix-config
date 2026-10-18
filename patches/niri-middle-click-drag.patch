@@ -1,8 +1,7 @@
 diff --git a/src/input/mod.rs b/src/input/mod.rs
-index ab31df94..1bbee77a 100644
 --- a/src/input/mod.rs
 +++ b/src/input/mod.rs
-@@ -2838,7 +2838,7 @@ impl State {
+@@ -2820,7 +2820,7 @@
                      self.niri
                          .layout
                          .view_offset_gesture_begin(&output, Some(ws_idx), false);
@@ -11,25 +10,84 @@ index ab31df94..1bbee77a 100644
                      pointer.set_grab(self, grab, serial, Focus::Clear);
                      self.niri
                          .cursor_manager
-@@ -2850,7 +2850,7 @@ impl State {
+@@ -2833,43 +2833,40 @@
+             }
+
+             if button == Some(MouseButton::Middle) && !pointer.is_grabbed() {
+-                let mod_down = modifiers_from_state(mods).contains(mod_key.to_modifiers());
+-                if mod_down {
+-                    let output_ws = if is_overview_open {
+-                        self.niri.workspace_under_cursor(true)
+-                    } else {
+-                        // We don't want to accidentally "catch" the wrong workspace during
+-                        // animations.
+-                        self.niri.output_under_cursor().and_then(|output| {
+-                            let mon = self.niri.layout.monitor_for_output(&output)?;
+-                            Some((output, mon.active_workspace_ref()))
+-                        })
++                let output_ws = if is_overview_open {
++                    self.niri.workspace_under_cursor(true)
++                } else {
++                    // We don't want to accidentally "catch" the wrong workspace during
++                    // animations.
++                    self.niri.output_under_cursor().and_then(|output| {
++                        let mon = self.niri.layout.monitor_for_output(&output)?;
++                        Some((output, mon.active_workspace_ref()))
++                    })
++                };
++
++                if let Some((output, ws)) = output_ws {
++                    let ws_id = ws.id();
++
++                    self.niri.layout.focus_output(&output);
++
++                    let location = pointer.current_location();
++                    let start_data = PointerGrabStartData {
++                        focus: None,
++                        button: button_code,
++                        location,
+                     };
+-
+-                    if let Some((output, ws)) = output_ws {
+-                        let ws_id = ws.id();
+-
+-                        self.niri.layout.focus_output(&output);
+-
+-                        let location = pointer.current_location();
+-                        let start_data = PointerGrabStartData {
+-                            focus: None,
+-                            button: button_code,
+-                            location,
+-                        };
+-                        let grab = SpatialMovementGrab::new(start_data, output, ws_id, false);
+-                        pointer.set_grab(self, grab, serial, Focus::Clear);
+-                        self.niri
+-                            .cursor_manager
+-                            .set_cursor_image(CursorImageStatus::Named(CursorIcon::AllScroll));
+-
+-                        // FIXME: granular.
+-                        self.niri.queue_redraw_all();
+-
+-                        // Don't activate the window under the cursor to avoid unnecessary
+-                        // scrolling when e.g. Mod+MMB clicking on a partially off-screen window.
+-                        return;
+-                    }
++                    let grab = SpatialMovementGrab::new(start_data, event.time_msec(), output, ws_id, false);
++                    pointer.set_grab(self, grab, serial, Focus::Clear);
++                    self.niri
++                        .cursor_manager
++                        .set_cursor_image(CursorImageStatus::Named(CursorIcon::AllScroll));
++
++                    // FIXME: granular.
++                    self.niri.queue_redraw_all();
++
++                    // Don't activate the window under the cursor to avoid unnecessary
++                    // scrolling when e.g. Mod+MMB clicking on a partially off-screen window.
++                    return;
                  }
              }
 
--            if button == Some(MouseButton::Middle) && !pointer.is_grabbed() && mod_down {
-+            if button == Some(MouseButton::Middle) && !pointer.is_grabbed() {
-                 let output_ws = if is_overview_open {
-                     self.niri.workspace_under_cursor(true)
-                 } else {
-@@ -2873,7 +2873,7 @@ impl State {
-                         button: button_code,
-                         location,
-                     };
--                    let grab = SpatialMovementGrab::new(start_data, output, ws_id, false);
-+                    let grab = SpatialMovementGrab::new(start_data, event.time_msec(), output, ws_id, false);
-                     pointer.set_grab(self, grab, serial, Focus::Clear);
-                     self.niri
-                         .cursor_manager
-@@ -3069,6 +3069,28 @@ impl State {
+@@ -3053,6 +3050,28 @@
              },
          );
          pointer.frame(self);
@@ -59,10 +117,9 @@ index ab31df94..1bbee77a 100644
 
      fn on_pointer_axis<I: InputBackend>(&mut self, event: I::PointerAxisEvent) {
 diff --git a/src/input/spatial_movement_grab.rs b/src/input/spatial_movement_grab.rs
-index 546929a0..40595ac0 100644
 --- a/src/input/spatial_movement_grab.rs
 +++ b/src/input/spatial_movement_grab.rs
-@@ -16,6 +16,7 @@ use crate::utils::get_monotonic_time;
+@@ -16,6 +16,7 @@
 
  pub struct SpatialMovementGrab {
      start_data: PointerGrabStartData<State>,
@@ -70,7 +127,7 @@ index 546929a0..40595ac0 100644
      last_location: Point<f64, Logical>,
      output: Output,
      workspace_id: WorkspaceId,
-@@ -37,6 +38,7 @@ enum GestureState {
+@@ -37,6 +38,7 @@
  impl SpatialMovementGrab {
      pub fn new(
          start_data: PointerGrabStartData<State>,
@@ -78,7 +135,7 @@ index 546929a0..40595ac0 100644
          output: Output,
          workspace_id: WorkspaceId,
          is_view_offset: bool,
-@@ -51,6 +53,7 @@ impl SpatialMovementGrab {
+@@ -51,6 +53,7 @@
          Self {
              last_location: location,
              start_data,
@@ -86,7 +143,7 @@ index 546929a0..40595ac0 100644
              output,
              workspace_id,
              gesture,
-@@ -186,8 +189,17 @@ impl PointerGrab<State> for SpatialMovementGrab {
+@@ -186,8 +189,17 @@
          handle.button(data, event);
 
          if handle.current_pressed().is_empty() {
@@ -105,10 +162,9 @@ index 546929a0..40595ac0 100644
      }
 
 diff --git a/src/niri.rs b/src/niri.rs
-index 414f702d..00ddd0a9 100644
 --- a/src/niri.rs
 +++ b/src/niri.rs
-@@ -413,6 +413,8 @@ pub struct Niri {
+@@ -414,6 +414,8 @@
 
      #[cfg(feature = "xdp-gnome-screencast")]
      pub casting: Screencasting,
@@ -117,7 +173,7 @@ index 414f702d..00ddd0a9 100644
  }
 
  #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-@@ -2567,6 +2569,8 @@ impl Niri {
+@@ -2625,6 +2627,8 @@
 
              #[cfg(feature = "xdp-gnome-screencast")]
              casting: screencasting,

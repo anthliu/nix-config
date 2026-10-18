@@ -88,6 +88,11 @@ nix flake update
 To update only Codex, run `nix flake update codex-cli-nix`. Its package tracks
 OpenAI releases independently of the system nixpkgs pin.
 
+Niri and Mango come from the main nixpkgs input, keeping their build libraries
+aligned with the system graphics drivers. Niri uses Home Manager's built-in
+`wayland.windowManager.niri` module. Its existing middle-click customization is
+applied in `packages/niri-patched.nix`; there are no separate compositor inputs.
+
 
 2. **Apply the Update**:
 ```bash

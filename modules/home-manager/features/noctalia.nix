@@ -1,22 +1,37 @@
-{ pkgs, inputs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 
 let
   # Noctalia's widget layouts match connector names, not Niri's EDID selectors.
   # Cover laptop panels and desktop/dock ports; disconnected outputs are ignored.
-  lockOutputs = [ "eDP-1" "eDP-2" ]
-    ++ lib.genList (n: "DP-${toString (n + 1)}") 8
-    ++ lib.genList (n: "HDMI-A-${toString (n + 1)}") 2;
-  lockWidget = output: extra: {
-    inherit output;
-    # Native placement scales centers, but not widget boxes. Keep controls grouped
-    # and use a smaller clock on internal panels than on desktop/dock outputs.
-    placement_width = 1920.0;
-    placement_height = 1080.0;
-    cx = 960.0;
-  } // extra;
-  lockWidgets = lib.foldl' (widgets: output:
-    let laptop = lib.hasPrefix "eDP-" output;
-    in widgets // {
+  lockOutputs = [
+    "eDP-1"
+    "eDP-2"
+  ]
+  ++ lib.genList (n: "DP-${toString (n + 1)}") 8
+  ++ lib.genList (n: "HDMI-A-${toString (n + 1)}") 2;
+  lockWidget =
+    output: extra:
+    {
+      inherit output;
+      # Native placement scales centers, but not widget boxes. Keep controls grouped
+      # and use a smaller clock on internal panels than on desktop/dock outputs.
+      placement_width = 1920.0;
+      placement_height = 1080.0;
+      cx = 960.0;
+    }
+    // extra;
+  lockWidgets = lib.foldl' (
+    widgets: output:
+    let
+      laptop = lib.hasPrefix "eDP-" output;
+    in
+    widgets
+    // {
       "stacked-clock@${output}" = lockWidget output {
         type = "clock";
         cy = if laptop then 400.0 else 430.0;
@@ -80,11 +95,10 @@ let
           color = "on_surface";
         };
       };
-  }) { } lockOutputs;
+    }
+  ) { } lockOutputs;
 in
 {
-  imports = [ inputs.noctalia.homeModules.default ];
-
   # Clock widgets request Bold internally. Select the actual Medium face without
   # artificial emboldening, and keep equal-width digits scoped to this clock font.
   fonts.fontconfig.configFile.noctalia-clock = {
@@ -142,8 +156,17 @@ in
         background_opacity = 0.0;
         shadow = false;
         widget_spacing = 10;
-        start = [ "launcher" "wallpaper" "workspaces" "media" ];
-        center = [ "clock" "clock-weather-gap" "weather" ];
+        start = [
+          "launcher"
+          "wallpaper"
+          "workspaces"
+          "media"
+        ];
+        center = [
+          "clock"
+          "clock-weather-gap"
+          "weather"
+        ];
         end = [
           "tray"
           "notifications"
@@ -197,21 +220,58 @@ in
     };
   };
 
-  programs.niri.settings = {
+  wayland.windowManager.niri.settings = {
     binds = {
-      "Mod+Space".action = config.lib.niri.actions.spawn "${pkgs.noctalia}/bin/noctalia" "msg" "panel-toggle" "launcher";
-      "Mod+Shift+Space".action = config.lib.niri.actions.spawn "${pkgs.noctalia}/bin/noctalia" "msg" "panel-toggle" "control-center";
-      "Mod+Ctrl+Comma".action = config.lib.niri.actions.spawn "${pkgs.noctalia}/bin/noctalia" "msg" "settings-toggle";
-      "Mod+Alt+L".action = config.lib.niri.actions.spawn "${pkgs.noctalia}/bin/noctalia" "msg" "session" "lock";
-      "Mod+S".action = lib.mkForce (config.lib.niri.actions.spawn "${pkgs.noctalia}/bin/noctalia" "msg" "screenshot-region");
-      "Print".action = lib.mkForce (config.lib.niri.actions.spawn "${pkgs.noctalia}/bin/noctalia" "msg" "screenshot-region");
-      "Ctrl+Print".action = lib.mkForce (config.lib.niri.actions.spawn "${pkgs.noctalia}/bin/noctalia" "msg" "screenshot-region");
-      "Alt+Print".action = lib.mkForce (config.lib.niri.actions.spawn "${pkgs.noctalia}/bin/noctalia" "msg" "screenshot-region");
+      "Mod+Space".spawn = [
+        "${pkgs.noctalia}/bin/noctalia"
+        "msg"
+        "panel-toggle"
+        "launcher"
+      ];
+      "Mod+Shift+Space".spawn = [
+        "${pkgs.noctalia}/bin/noctalia"
+        "msg"
+        "panel-toggle"
+        "control-center"
+      ];
+      "Mod+Ctrl+Comma".spawn = [
+        "${pkgs.noctalia}/bin/noctalia"
+        "msg"
+        "settings-toggle"
+      ];
+      "Mod+Alt+L".spawn = [
+        "${pkgs.noctalia}/bin/noctalia"
+        "msg"
+        "session"
+        "lock"
+      ];
+      "Mod+S".spawn = lib.mkForce [
+        "${pkgs.noctalia}/bin/noctalia"
+        "msg"
+        "screenshot-region"
+      ];
+      "Print".spawn = lib.mkForce [
+        "${pkgs.noctalia}/bin/noctalia"
+        "msg"
+        "screenshot-region"
+      ];
+      "Ctrl+Print".spawn = lib.mkForce [
+        "${pkgs.noctalia}/bin/noctalia"
+        "msg"
+        "screenshot-region"
+      ];
+      "Alt+Print".spawn = lib.mkForce [
+        "${pkgs.noctalia}/bin/noctalia"
+        "msg"
+        "screenshot-region"
+      ];
     };
-    window-rules = [
+    _children = [
       {
-        matches = [ { app-id = "^dev\\.noctalia\\.Noctalia$"; } ];
-        open-floating = true;
+        window-rule = {
+          match._props.app-id = "^dev\\.noctalia\\.Noctalia$";
+          open-floating = true;
+        };
       }
     ];
   };

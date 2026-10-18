@@ -1,13 +1,10 @@
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 
 {
-  imports = [ inputs.mango.hmModules.mango ];
+  home.packages = [ pkgs.mango ];
 
-  wayland.windowManager.mango = {
-    enable = true;
-    systemd.enable = true;
-
-    settings = ''
+  xdg.configFile = {
+    "mango/config.conf".text = ''
       # === NVIDIA + wlroots (must be before any rendering) ===
       env=WLR_RENDERER,vulkan
       env=GBM_BACKEND,nvidia-drm
@@ -294,17 +291,21 @@
       exec-once=mako
     '';
 
-    autostart_sh = ''
-      # Synchronize the full user environment with the systemd session bus.
-      # This passes Wayland variables to user services.
-      dbus-update-activation-environment --systemd --all
+    "mango/autostart.sh" = {
+      executable = true;
+      text = ''
+        #!${pkgs.runtimeShell}
+
+        # Synchronize the full user environment with the systemd session bus.
+        # This passes Wayland variables to user services.
+        dbus-update-activation-environment --systemd --all
 
 
-      # Start the standard graphical session target
-      # This starts session-dependent user services.
-      systemctl --user start graphical-session.target
-    '';
-
+        # Start the standard graphical session target
+        # This starts session-dependent user services.
+        systemctl --user start graphical-session.target
+      '';
+    };
   };
 
   # Set idle display commands for swayidle

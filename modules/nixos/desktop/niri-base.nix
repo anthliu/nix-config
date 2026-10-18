@@ -1,11 +1,11 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [ ./wayland-common.nix ];
 
   programs.niri = {
     enable = true;
-    package = import ../../../packages/niri-patched.nix { inherit pkgs inputs; };
+    package = import ../../../packages/niri-patched.nix { inherit pkgs; };
   };
 
   environment.systemPackages = with pkgs; [

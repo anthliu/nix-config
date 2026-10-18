@@ -66,33 +66,30 @@
     '')
   ];
 
-  programs.niri.settings.outputs = {
-    "Dell Inc. AW3423DWF BDRK2S3" = {
-      mode = {
-        width = 3440;
-        height = 1440;
-        refresh = 164.900;
+  wayland.windowManager.niri.settings._children = [
+    {
+      output = {
+        _args = [ "Dell Inc. AW3423DWF BDRK2S3" ];
+        mode = "3440x1440@164.900";
+        scale = 1.0;
+        position._props = {
+          x = 0;
+          y = 0;
+        };
       };
-      scale = 1.0;
-      position = {
-        x = 0;
-        y = 0;
+    }
+    {
+      output = {
+        _args = [ "Samsung Electric Company Odyssey G81SF HNBYA00490" ];
+        mode = "3840x2160@239.996";
+        scale = 1.25;
+        position._props = {
+          x = 3440;
+          y = 0;
+        };
       };
-    };
-
-    "Samsung Electric Company Odyssey G81SF HNBYA00490" = {
-      mode = {
-        width = 3840;
-        height = 2160;
-        refresh = 239.996;
-      };
-      scale = 1.25;
-      position = {
-        x = 3440;
-        y = 0;
-      };
-    };
-  };
+    }
+  ];
 
   xdg.desktopEntries = {
     google-chrome-igpu = {

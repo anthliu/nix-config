@@ -1,9 +1,9 @@
 # Single source of truth for the patched niri build, shared by the NixOS
-# module (modules/nixos/desktop/niri.nix) and the home-manager feature
+# module (modules/nixos/desktop/niri-base.nix) and the home-manager feature
 # (modules/home-manager/features/niri.nix).
-{ pkgs, inputs }:
+{ pkgs }:
 
-inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable.overrideAttrs (old: {
+pkgs.niri.overrideAttrs (old: {
   patches = (old.patches or [ ]) ++ [
     ../patches/niri-middle-click-drag.patch
   ];

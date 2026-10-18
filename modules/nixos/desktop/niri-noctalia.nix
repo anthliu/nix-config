@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 
 let
   colors = config.lib.stylix.colors.withHashtag;
@@ -7,14 +12,22 @@ let
   # Match desktop monitor identities so docking into another port keeps the scale.
   # Keep widget sizes fixed in logical pixels, using the normal desktop DPI scale.
   # Unlisted displays retain Niri's automatic DPI.
-  outputs = config.home-manager.users.anthliu.programs.niri.settings.outputs;
-  outputRules = lib.concatStringsSep "\n" (lib.mapAttrsToList (name: output:
-    lib.optionalString (output.scale != null) ''
-      output ${builtins.toJSON name} {
-        scale ${toString output.scale}
-      }
-    ''
-  ) outputs);
+  outputs = lib.filter (node: node ? output && node.output ? scale) (
+    config.home-manager.users.anthliu.wayland.windowManager.niri.settings._children or [ ]
+  );
+  outputRules = lib.concatStringsSep "\n" (
+    map (
+      node:
+      let
+        output = node.output;
+      in
+      ''
+        output ${builtins.toJSON (builtins.head output._args)} {
+          scale ${toString output.scale}
+        }
+      ''
+    ) outputs
+  );
   greeterConfig = pkgs.writeTextFile {
     name = "regreet-niri.kdl";
     text = ''
