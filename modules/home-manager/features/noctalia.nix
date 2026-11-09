@@ -134,6 +134,8 @@ in
       };
       wallpaper.enabled = true;
       lockscreen = {
+        transition = [ "fade" ];
+        transition_duration = 250;
         blur_intensity = 0.1;
         tint_intensity = 0.25;
       };

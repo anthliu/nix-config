@@ -9,8 +9,7 @@
 
     inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.codex-cli-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
-    antigravity-cli
-    opencode
+    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity-cli
     pi-coding-agent
 
     texliveFull
